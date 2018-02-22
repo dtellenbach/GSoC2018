@@ -1,13 +1,12 @@
 CC := clang++
 SRCDIR := src
 BUILDDIR := build
-TARGET := bin/ivenareport
 
-SRCEXT := cpp
+SRCEXT := cc
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -Wall -Wpedantic -std=c++11
-LDFLAGS = -lmysqlcppconn -lssh
+CFLAGS := -Wall -Wpedantic -std=c++11 
+LDFLAGS = -lbenchmark
 INC := -I include
 
 all:
@@ -19,6 +18,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 	
+
 clean:
 	@echo " Cleaning..."; 
 	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
