@@ -38,7 +38,7 @@ The repository is structured as follows
     ├── build
     └── bin
 
-## Build ##
+## How to build ##
 
 The SymmatricMatrix class is header only, therefore you can just include the file ``./include/SymmatricMatrix.h``, change the include path for Eigen and give it a try.
 
@@ -66,7 +66,7 @@ Actually you can build everything except the Google benchmarks with nothing inst
 
 ## Further Information ##
 
-Further information on how the project is 
+Further information about the design of the SymmetricMatrix class and benchmark results for both, time and space, check out the [documentation](./doc/Documentation.pdf).
 
 
 
