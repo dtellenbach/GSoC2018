@@ -8,6 +8,7 @@
 #include <random>
 #include <ostream>
 #include <algorithm>
+#include <stdexcept>
 #include "eigen3/Eigen/Eigen"
 
 template<typename Scalar>
@@ -91,9 +92,16 @@ class SymmetricMatrix {
      * \return Sum of the matrices.
      */
     SymmetricMatrix<Scalar> operator+(const SymmetricMatrix<Scalar>& other) {
+        // Check if both dimensions match, if not throw exception (runtime case)
+        if (dim() != other.dim()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
+
+        // Construct new matrix and set underlying std::vector
         SymmetricMatrix<Scalar> ret(elements, dimension);
-        int numElements = elements.size();
-        for (int i = 0; i < numElements; ++i) {
+
+        // Just add up both underlying std::vector
+        for (int i = 0; i < elements.size(); ++i) {
            ret.elements[i] += other.elements[i];
         }
         return ret;
@@ -107,6 +115,10 @@ class SymmetricMatrix {
      * \return Difference of both matrices.
      */
     SymmetricMatrix<Scalar> operator-(const SymmetricMatrix<Scalar>& other) {
+        // Check if both dimensions match, if not throw exception (runtime case)
+        if (dim() != other.dim()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
         SymmetricMatrix<Scalar> ret(elements, dimension);
         int numElements = elements.size();
         for (int i = 0; i < numElements; ++i) {
@@ -126,7 +138,11 @@ class SymmetricMatrix {
                                   Eigen::Dynamic, 
                                   Eigen::Dynamic>& other) {
         Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret;
-        
+
+        // Check if both dimensions match, if not throw exception (runtime case)
+        if (dim() != other.cols()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 ret(i,j) = operator()(i,j) + other(i,j);
@@ -156,9 +172,15 @@ class SymmetricMatrix {
 
     /**
      * Overloaded operator * for multiplying to symmetric matrices. 
+     * \param other Symmetric matrix to multiply with
+     * \return Eigen::Matrix that is the product of both symmetric matrices
      */
     Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> 
     operator*(const SymmetricMatrix<Scalar>& other) {
+        // Check if both dimensions match, if not throw exception (runtime case)
+        if (dim() != other.cols()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
         return Eigen::Matrix<Scalar, 
                              Eigen::Dynamic, 
                              Eigen::Dynamic>(constructEigenMatrix() 
@@ -175,6 +197,10 @@ class SymmetricMatrix {
     operator*(const Eigen::Matrix<Scalar, 
                                   Eigen::Dynamic, 
                                   Eigen::Dynamic>& other) {
+        // Check if both dimensions match, if not throw exception (runtime case)
+        if (dim() != other.cols()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
         return Eigen::Matrix<Scalar, 
                              Eigen::Dynamic, 
                              Eigen::Dynamic>(constructEigenMatrix() * other);

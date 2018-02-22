@@ -16,15 +16,16 @@ import subprocess
 compiler = 'g++'
 
 def run(file):
+    print("Running {}...".format(file))
     try:
         proc = subprocess.Popen([file], stdout=subprocess.PIPE, 
                                  stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate()
         if len(stderr) != 0:
-            print(stderr.decode("utf-8"))
+            print(stderr.decode("utf-8"), end = "")
             exit()
         if len(stdout) != 0:
-            print(stdout.decode("utf-8"))
+            print(stdout.decode("utf-8"), end = "")
     except subprocess.TimeoutExpired:
         proc.kill()
         outs, errs = proc.communicate()
@@ -69,7 +70,7 @@ def buildTest(infile, outfile):
     build([compiler], outfile, infile, compiler, ccargs, [])
 
 def buildExample(infile, outfile):
-    infile = os.path.join('./example', infile)
+    infile = os.path.join('./examples', infile)
     ccargs = ['-std=c++11', '-O3']
     global compiler
     build([compiler], outfile, infile, compiler, ccargs, [])
@@ -121,13 +122,12 @@ def findFiles(path):
 
 def usageMsg():
     ret = ('\nbuild.py --type {test,example,benchmark,googlebenchmark}\n'
-           '         --file FILE --out FILE [--run] [--list] [-h]')
+           '         --file FILE --out FILE [--run] [--list] [--clean][-h]')
     return ret
 
 def main():
     
     # Parse command line arguments
-
     parser = argparse.ArgumentParser(description='Build benchmarks, tests and examples '
                                                  'for the evaluation test for '
                                                  'the Google Summer of Code '
@@ -245,7 +245,9 @@ def main():
     if args.outfile is None:
         outfile = os.path.splitext(infile)[0] 
         outfile = './bin/' + outfile
-
+    else:
+        outfile = args.outfile
+        
     # Check for compiler
     global compiler
     if args.compiler is None or args.compiler == 'gcc':
