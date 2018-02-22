@@ -7,20 +7,21 @@
 #include <sstream>
 #include <random>
 #include <ostream>
+#include <algorithm>
 #include "eigen3/Eigen/Eigen"
 
-template<typename Scalar = void>
-class SymMat {
+template<typename Scalar>
+class SymmetricMatrix {
     public:
     /**
      * Default constructor
      */
-    SymMat() : dimension(0) {};
+    SymmetricMatrix() : dimension(0) {};
 
     /**
      * Constructor that builds a symmetric matrix from an Eigen::Matrix
      */
-    SymMat(const Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>& mat) 
+    SymmetricMatrix(const Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>& mat) 
     : dimension (mat.cols()) {
         for (int row = 0; row < dimension; row++) {
             for (int col = row; col < dimension; col++) {
@@ -32,16 +33,21 @@ class SymMat {
     /**
      * Construtor that builds a symmetric matrix from a row major std::vector<T>.
      */
-    SymMat(const std::vector<Scalar>& vec) : elements(vec) {
+    SymmetricMatrix(const std::vector<Scalar>& vec) : elements(vec) {
         // Calculation of dimension
         dimension = (sqrt(1+8*vec.size())-1)/2;
     }
 
+    SymmetricMatrix(const Scalar* vec, int dimension, int size) : dimension(dimension) {
+        for (int i = 0; i < size; ++i) {
+            elements.push_back(vec[i]);
+        }
+    }
     /**
      * Constructor that builds a symmetric matrix from a row major std::vector<T>.
      * The dimension is passed as an arguments and does not have to be calculated
      */
-    SymMat(const std::vector<Scalar>& vec, int dimension) : elements(vec),
+    SymmetricMatrix(const std::vector<Scalar>& vec, int dimension) : elements(vec),
                                                             dimension(dimension)
                                                             {}
 
@@ -84,8 +90,8 @@ class SymMat {
      * \param other The symmetric matrix to add with.
      * \return Sum of the matrices.
      */
-    SymMat<Scalar> operator+(const SymMat<Scalar>& other) {
-        SymMat<Scalar> ret(elements, dimension);
+    SymmetricMatrix<Scalar> operator+(const SymmetricMatrix<Scalar>& other) {
+        SymmetricMatrix<Scalar> ret(elements, dimension);
         int numElements = elements.size();
         for (int i = 0; i < numElements; ++i) {
            ret.elements[i] += other.elements[i];
@@ -100,8 +106,8 @@ class SymMat {
      * \param other The symmetric matrix to subtract with.
      * \return Difference of both matrices.
      */
-    SymMat<Scalar> operator-(const SymMat<Scalar>& other) {
-        SymMat<Scalar> ret(elements, dimension);
+    SymmetricMatrix<Scalar> operator-(const SymmetricMatrix<Scalar>& other) {
+        SymmetricMatrix<Scalar> ret(elements, dimension);
         int numElements = elements.size();
         for (int i = 0; i < numElements; ++i) {
            ret.elements[i] -= other.elements[i];
@@ -152,7 +158,7 @@ class SymMat {
      * Overloaded operator * for multiplying to symmetric matrices. 
      */
     Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> 
-    operator*(const SymMat<Scalar>& other) {
+    operator*(const SymmetricMatrix<Scalar>& other) {
         return Eigen::Matrix<Scalar, 
                              Eigen::Dynamic, 
                              Eigen::Dynamic>(constructEigenMatrix() 
@@ -180,7 +186,7 @@ class SymMat {
      * \param mat Matrix that is printed
      * \return Output stream with representation of matrix pushed on
      */
-    friend std::ostream& operator<<(std::ostream& stream, SymMat<Scalar>& mat) {
+    friend std::ostream& operator<<(std::ostream& stream, SymmetricMatrix<Scalar>& mat) {
         for (int row = 0; row < mat.dim(); row++) {
             for (int col = 0; col < mat.dim(); col++) {
                 stream << mat(row, col) << " ";
@@ -196,4 +202,4 @@ class SymMat {
 };
 
 
-#endif /* GSOC_SYMMAT_H */
+#endif /* GSOC_SymmetricMatrix_H */

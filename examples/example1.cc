@@ -1,4 +1,4 @@
-/*******************************************************************************  
+/****************************************************************************** 
  *  Google Summer of Code - Faster Matrix Multiplication for ATLAS             *
  *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de> - 2018-02-20               *
  *                                                                             *
