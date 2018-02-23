@@ -9,13 +9,90 @@
 #include <ostream>
 #include <algorithm>
 #include <stdexcept>
+#include <array>
 #include "eigen3/Eigen/Eigen"
 
-template<typename Scalar>
+
+template<typename Scalar, int Dimension = Eigen::Dynamic>
 class SymmetricMatrix {
+
+    public:
+    /* Constructors */
+
+    SymmetricMatrix(const Eigen::Matrix<Scalar, Dimension, Dimension>& mat) {
+        int i = 0;
+        for (int row = 0; row < Dimension; ++row) {
+            for (int col = row; col < Dimension; ++col) {
+                elements[i++] = mat(row,col);
+            }
+        }
+    }
+
+    // SymmetricMatrix(const std::array<Scalar, calcArraySize()>& vec) 
+    // : elements(vec) {}
+    
+    /* Overloaded operators */
+    Scalar& operator()(int row, int col) {
+        if (row <= col) {
+            return elements[row * Dimension - (row-1)*((row-1) + 1)/2 + col - row];
+        } else {
+            return elements[col * Dimension - (col-1)*((col-1) + 1)/2 + row - col];
+        }
+    }
+
+    friend std::ostream& operator<<(std::ostream& stream, SymmetricMatrix<Scalar, Dimension>& mat) {
+        for (int row = 0; row < Dimension; ++row) {
+            for (int col = 0; col < Dimension; ++col) {
+                stream << mat(row, col) << " ";
+            }
+            stream << "\n";
+        }
+        return stream;
+    }
+
+    SymmetricMatrix<Scalar, Dimension> operator+(const SymmetricMatrix<Scalar, Dimension>& other) {
+        // Construct new matrix and set underlying std::array
+        SymmetricMatrix<Scalar, Dimension> ret(other);
+        // Just add up both underlying std::vector
+        for (int i = 0; i < elements.size(); ++i) {
+           ret.elements[i] += other.elements[i];
+        }
+        return ret;
+    }
+
+    Eigen::Matrix<Scalar, Dimension, Dimension> operator+(const Eigen::Matrix<Scalar, Dimension, Dimension>& other) {
+        Eigen::Matrix<Scalar, Dimension, Dimension> ret;
+    
+        for (int i = 0; i < Dimension; i++) {
+            for (int j = i; j < Dimension; j++) {
+                Scalar tmp = operator()(i, j);
+                ret(i, j) = tmp + other(i, j);
+                ret(j, i) = tmp + other(j, i);
+            }
+        }
+        return ret;
+    }
+
+    private:
+    static constexpr int calcArraySize(); 
+    std::array<Scalar, calcArraySize()> elements;  
+};
+
+template<typename Scalar, int Dimension>
+constexpr int SymmetricMatrix<Scalar, Dimension>::calcArraySize() {
+    return (Dimension * Dimension + Dimension) / 2;
+}
+
+
+
+/**
+ * Partial template specialisation (Dimension = Eigen::Dynamic)
+ */
+template<typename Scalar>
+class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     public:
     /**
-     * Default constructor
+     * Default constructor that constructs and 0-dimensional symmetric matrix
      */
     SymmetricMatrix() : dimension(0) {};
 
@@ -24,6 +101,12 @@ class SymmetricMatrix {
      */
     SymmetricMatrix(const Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>& mat) 
     : dimension (mat.cols()) {
+        // check if mat is a square matrix
+        if (mat.cols() != mat.rows()) {
+             throw std::invalid_argument("Not a square matrix");
+        }
+
+        // Push upper triangular part of mat into the underlying std::vector
         for (int row = 0; row < dimension; row++) {
             for (int col = row; col < dimension; col++) {
                 elements.push_back(mat(row,col));
@@ -39,26 +122,26 @@ class SymmetricMatrix {
         dimension = (sqrt(1+8*vec.size())-1)/2;
     }
 
-    SymmetricMatrix(const Scalar* vec, int dimension, int size) : dimension(dimension) {
-        for (int i = 0; i < size; ++i) {
-            elements.push_back(vec[i]);
-        }
-    }
     /**
      * Constructor that builds a symmetric matrix from a row major std::vector<T>.
      * The dimension is passed as an arguments and does not have to be calculated
      */
     SymmetricMatrix(const std::vector<Scalar>& vec, int dimension) : elements(vec),
-                                                            dimension(dimension)
-                                                            {}
+                                                                     dimension(dimension)
+                                                                     {}
 
     /**
-     * Checks if a matrix is symmetric or not.
+     * Checks if a matrix of type Eigen::Matrix is symmetric or not.
      * \param mat Matrix of type Eigen::Matrix.
      * \return True if mat is symmetric, false otherwise
      */
     static bool isSymmetric(const Eigen::Matrix<Scalar, Eigen::Dynamic, 
                                                 Eigen::Dynamic>& mat) {
+        // if mat is not square its not symmetric
+        if (mat.cols() != mat.rows()) {
+            return false;
+        }
+        // if mat is square we check if it is equal to the transposed matrix
         return (mat == mat.transpose())?true:false;
     }
     
@@ -140,7 +223,7 @@ class SymmetricMatrix {
         Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret;
 
         // Check if both dimensions match, if not throw exception (runtime case)
-        if (dim() != other.cols()) {
+        if (dim() != other.dim()) {
             throw std::invalid_argument("Not matching dimension");
         }
         for (int i = 0; i < dimension; i++) {
@@ -161,6 +244,7 @@ class SymmetricMatrix {
         Eigen::Matrix<Scalar, 
                       Eigen::Dynamic, 
                       Eigen::Dynamic> ret(dimension, dimension);
+        // Only loop through the upper triangular part
         for (int i = 0; i < dimension; ++i) {
             for (int j = i; j < dimension; ++j) {
                 ret(i, j) = operator()(i, j);
@@ -178,7 +262,7 @@ class SymmetricMatrix {
     Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> 
     operator*(const SymmetricMatrix<Scalar>& other) {
         // Check if both dimensions match, if not throw exception (runtime case)
-        if (dim() != other.cols()) {
+        if (dim() != other.dim()) {
             throw std::invalid_argument("Not matching dimension");
         }
         return Eigen::Matrix<Scalar, 
@@ -226,6 +310,7 @@ class SymmetricMatrix {
     std::vector<Scalar> elements;
     Eigen::Index dimension;
 };
+
 
 
 #endif /* GSOC_SymmetricMatrix_H */

@@ -1,8 +1,8 @@
-/****************************************************************************** 
+/******************************************************************************* 
  *  Google Summer of Code - Faster Matrix Multiplication for ATLAS             *
  *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de> - 2018-02-20               *
  *                                                                             *
- *  Example 2 - Basic arithmetic operations                                    *
+ *  Example 1 - Basics                                                         *
  *  Topics covered: > Construct a symmetric matrix from an Eigen::Matrix       *
  *                  > Print symmetric matrix onto console                      *
  *                  > Test if an Eigen::Matrix is symmetric or not             *
