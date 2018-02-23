@@ -7,8 +7,6 @@ class Stopwatch {
 public:
 
     Stopwatch() = default;
-
-    // Let's just forget about this kind of strangeness
     Stopwatch(const Stopwatch&) = delete; 
     Stopwatch& operator=(const Stopwatch&) = delete; 
 
@@ -26,8 +24,6 @@ public:
     }
 
 private:
-    // Today I've learned, I should use steady_clock instead of system_clock to 
-    // measure time (because std::chrono::system_clock might be readjusted by the OS)
     std::chrono::time_point<std::chrono::steady_clock> starting_time;
     std::chrono::time_point<std::chrono::steady_clock> stopping_time;
 };

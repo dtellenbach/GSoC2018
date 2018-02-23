@@ -28,9 +28,6 @@ class SymmetricMatrix {
         }
     }
 
-    // SymmetricMatrix(const std::array<Scalar, calcArraySize()>& vec) 
-    // : elements(vec) {}
-    
     /* Overloaded operators */
     Scalar& operator()(int row, int col) {
         if (row <= col) {
