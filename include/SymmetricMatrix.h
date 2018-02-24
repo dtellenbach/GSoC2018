@@ -151,7 +151,7 @@ class SymmetricMatrix {
             for (int col = 0; col < Dimension; ++col) {
                 stream << mat(row, col) << " ";
             }
-            stream << (row == mat.dim() - 1)?:"\n";
+            stream << ((row == mat.dim() - 1)?"\n":"\n");
         }
         return stream;
     }
@@ -239,8 +239,8 @@ class SymmetricMatrix {
     operator+(const Eigen::Matrix<Scalar, Dimension, Dimension>& other) {
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
-        for (int i = 0; i < Dimension; i++) {
-            for (int j = i; j < Dimension; j++) {
+        for (int i = 0; i < Dimension; ++i) {
+            for (int j = i; j < Dimension; ++j) {
                 Scalar tmp = operator()(i, j);
                 ret(i, j) = tmp + other(i, j);
                 ret(j, i) = tmp + other(j, i);
@@ -263,8 +263,8 @@ class SymmetricMatrix {
         }
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
-        for (int i = 0; i < Dimension; i++) {
-            for (int j = i; j < Dimension; j++) {
+        for (int i = 0; i < Dimension; ++i) {
+            for (int j = i; j < Dimension; ++j) {
                 Scalar tmp = operator()(i, j);
                 ret(i, j) = tmp + other(i, j);
                 ret(j, i) = tmp + other(j, i);
@@ -282,8 +282,8 @@ class SymmetricMatrix {
     operator-(const Eigen::Matrix<Scalar, Dimension, Dimension>& other) {
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
-        for (int i = 0; i < Dimension; i++) {
-            for (int j = i; j < Dimension; j++) {
+        for (int i = 0; i < Dimension; ++i) {
+            for (int j = i; j < Dimension; ++j) {
                 Scalar tmp = operator()(i, j);
                 ret(i, j) = tmp - other(i, j);
                 ret(j, i) = tmp - other(j, i);
@@ -306,8 +306,8 @@ class SymmetricMatrix {
         }
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
-        for (int i = 0; i < Dimension; i++) {
-            for (int j = i; j < Dimension; j++) {
+        for (int i = 0; i < Dimension; ++i) {
+            for (int j = i; j < Dimension; ++j) {
                 Scalar tmp = operator()(i, j);
                 ret(i, j) = tmp - other(i, j);
                 ret(j, i) = tmp - other(j, i);
@@ -542,9 +542,132 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
             for (int col = 0; col < mat.dim(); ++col) {
                 stream << mat(row, col) << " ";
             }
-            stream << (row == mat.dim() - 1)?:"\n";
+            stream << ((row == mat.dim() - 1)?"":"\n");
         }
         return stream;
+    }
+
+    /**
+     * \brief Overloaded operator + to add a SymmetricMatrix with dynamic dimension.
+     * \param other Matrix to add
+     * \return Sum of both matrices
+     */
+    SymmetricMatrix<Scalar>
+    operator+(const SymmetricMatrix<Scalar>& other) {
+        // Check if both dynamic dimensions match
+        if (dimension != other.dim()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
+
+        // Construct new matrix and set underlying std::vector
+        SymmetricMatrix<Scalar> ret(elements);
+
+        // Just add up both underlying std::vector
+        for (int i = 0; i < elements.size(); ++i) {
+           ret.elements[i] += other.elements[i];
+        }
+        return ret;
+    }
+
+    /**
+     * \brief Overloaded operator - to subtract a SymmetricMatrix with dynamic dimension.
+     * \param other Matrix to subtract
+     * \return Difference of both matrices
+     */
+    SymmetricMatrix<Scalar>
+    operator-(const SymmetricMatrix<Scalar>& other) {
+        // Check if both dynamic dimensions match
+        if (dimension != other.dim()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
+
+        // Construct new matrix and set underlying std::vector
+        SymmetricMatrix<Scalar> ret(elements);
+
+        // Just add up both underlying std::vector
+        for (int i = 0; i < elements.size(); ++i) {
+           ret.elements[i] -= other.elements[i];
+        }
+        return ret;
+    }
+
+    /**
+     * \brief Overloaded operator + to add an Eigen::Matrix with dynamic
+     * dimension
+     * \param other Matrix to add
+     * \return Sum of both matrices
+     */
+    Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
+    operator+(const Eigen::Matrix<Scalar,
+                                  Eigen::Dynamic, Eigen::Dynamic>& other) {
+        // Check if dynamic dimension is equal to fixed one
+        if (dimension != other.cols()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
+
+        Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension, 
+                                                                  dimension);
+
+        for (int i = 0; i < dimension; ++i) {
+            for (int j = i; j < dimension; ++j) {
+                Scalar tmp = operator()(i, j);
+                ret(i, j) = tmp + other(i, j);
+                ret(j, i) = tmp + other(j, i);
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * \brief Overloaded operator - to subtract an Eigen::Matrix with dynamic
+     * dimension
+     * \param other Matrix to subtract
+     * \return Difference of both matrices
+     */
+    Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
+    operator-(const Eigen::Matrix<Scalar,
+                                  Eigen::Dynamic, Eigen::Dynamic>& other) {
+        // Check if dynamic dimension is equal to fixed one
+        if (dimension != other.cols()) {
+            throw std::invalid_argument("Not matching dimension");
+        }
+        Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension,
+                                                                dimension);
+
+        for (int i = 0; i < dimension; ++i) {
+            for (int j = i; j < dimension; ++j) {
+                Scalar tmp = operator()(i, j);
+                ret(i, j) = tmp - other(i, j);
+                ret(j, i) = tmp - other(j, i);
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * \brief Overloaded operator * to multiply an SymmetricMatrix with dynamic
+     * dimension
+     * \param other Matrix to multiply
+     * \return Product of both matrices
+     */
+    Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
+    operator*(const SymmetricMatrix<Scalar>& other) {
+        return Eigen::Matrix<Scalar, Eigen::Dynamic,
+                             Eigen::Dynamic>(constructEigenMatrix()
+                                             * other.constructEigenMatrix());
+    }
+
+
+    /**
+     * \brief Overloaded operator * to multiply an Eigen::Matrix with dynamic dimension
+     * \param other Matrix to multiply
+     * \return Product of both matrices
+     */
+    Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
+    operator*(const Eigen::Matrix<Scalar,
+                                  Eigen::Dynamic, Eigen::Dynamic>& other) {
+        return Eigen::Matrix<Scalar, Eigen::Dynamic,
+                             Eigen::Dynamic>(constructEigenMatrix() * other);
     }
 
  private:
@@ -552,6 +675,85 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     size_t dimension;
 };
 
-
+/**
+ * \typedef SymmetricMatrix of ints with dynamic dimension
+ */
+typedef SymmetricMatrix<int, Eigen::Dynamic> SymmetricMatrixXi;
+/**
+ * \typedef SymmetricMatrix of floats with dynamic dimension
+ */
+typedef SymmetricMatrix<float, Eigen::Dynamic> SymmetricMatrixXf;
+/**
+ * \typedef SymmetricMatrix of doubles with dynamic dimension
+ */
+typedef SymmetricMatrix<double, Eigen::Dynamic> SymmetricMatrixXd;
+/**
+ * \typedef SymmetricMatrix of complex floats with dynamic dimension
+ */
+typedef SymmetricMatrix<std::complex<float>, Eigen::Dynamic> SymmetricMatrixXcf;
+/**
+ * \typedef SymmetricMatrix of complex doubles with dynamic dimension
+ */
+typedef SymmetricMatrix<std::complex<float>, Eigen::Dynamic> SymmetricMatrixXcd;
+/**
+ * \typedef SymmetricMatrix of ints with fixed dimension 2
+ */
+typedef SymmetricMatrix<int, 2> SymmetricMatrix2i;
+/**
+ * \typedef SymmetricMatrix of floats with fixed dimension 2
+ */
+typedef SymmetricMatrix<float, 2> SymmetricMatrix2f;
+/**
+ * \typedef SymmetricMatrix of doubles with fixed dimension 2
+ */
+typedef SymmetricMatrix<double, 2> SymmetricMatrix2d;
+/**
+ * \typedef SymmetricMatrix of complex floats with fixed dimension 2
+ */
+typedef SymmetricMatrix<std::complex<float>, 2> SymmetricMatrix2cf;
+/**
+ * \typedef SymmetricMatrix of complex doubles with fixed dimension 2
+ */
+typedef SymmetricMatrix<std::complex<double>, 2> SymmetricMatrix2cd;
+/**
+ * \typedef SymmetricMatrix of ints with fixed dimension 3
+ */
+typedef SymmetricMatrix<int, 3> SymmetricMatrix3i;
+/**
+ * \typedef SymmetricMatrix of floats with fixed dimension 3
+ */
+typedef SymmetricMatrix<float, 3> SymmetricMatrix3f;
+/**
+ * \typedef SymmetricMatrix of doubles with fixed dimension 3
+ */
+typedef SymmetricMatrix<double, 3> SymmetricMatrix3d;
+/**
+ * \typedef SymmetricMatrix of complex floats with fixed dimension 3
+ */
+typedef SymmetricMatrix<std::complex<float>, 3> SymmetricMatrix3cf;
+/**
+ * \typedef SymmetricMatrix of complex doubles with fixed dimension 3
+ */
+typedef SymmetricMatrix<std::complex<double>, 3> SymmetricMatrix3cd;
+/**
+ * \typedef SymmetricMatrix of ints with fixed dimension 4
+ */
+typedef SymmetricMatrix<int, 4> SymmetricMatrix4i;
+/**
+ * \typedef SymmetricMatrix of floats with fixed dimension 4
+ */
+typedef SymmetricMatrix<float, 4> SymmetricMatrix4f;
+/**
+ * \typedef SymmetricMatrix of doubles with fixed dimension 4
+ */
+typedef SymmetricMatrix<double, 4> SymmetricMatrix4d;
+/**
+ * \typedef SymmetricMatrix of complex floats with fixed dimension 4
+ */
+typedef SymmetricMatrix<std::complex<float>, 4> SymmetricMatrix4cf;
+/**
+ * \typedef SymmetricMatrix of complex doubles with fixed dimension 4
+ */
+typedef SymmetricMatrix<std::complex<double>, 4> SymmetricMatrix4cd;
 
 #endif /* GSOC_SymmetricMatrix_H */

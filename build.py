@@ -13,11 +13,15 @@ import os
 import argparse
 import subprocess
 
+# Default C++ compiler
 compiler = 'g++'
+
+# Default compiler arguments
+ccargs = ['-std=c++11']
 
 # Generic build function that gets called by all specific build functions with
 # different arguments depending on build type
-def build(dep, outfile, infile, cc, ccargs, largs):
+def build(dep, outfile, infile, cc, args):
     print("Checking dependencies...")
     for entry in dep:
         check = checkProgram(entry)
@@ -29,7 +33,8 @@ def build(dep, outfile, infile, cc, ccargs, largs):
             exit()
 
     # Join everything into a single list
-    cmd = [cc] + ccargs + largs + ['-o'] + [outfile, infile]
+    global ccargs
+    cmd = [cc] + args + ccargs + ['-o'] + [outfile, infile]
     
     print("Running {} ...".format(' '.join(cmd)))
     # Try to open subprocess and execute build command
@@ -51,39 +56,38 @@ def build(dep, outfile, infile, cc, ccargs, largs):
 # Buildtype test
 def buildTest(infile, outfile):
     infile = os.path.join('./test', infile)
-    ccargs = ['-std=c++11', '-Wall', '-Werror', '-Wpedantic']
+    args = ['-Wall', '-Werror', '-Wpedantic']
     global compiler
-    build([compiler], outfile, infile, compiler, ccargs, [])
+    build([compiler], outfile, infile, compiler, args)
 
 # Buildtype example
 def buildExample(infile, outfile):
     infile = os.path.join('./examples', infile)
-    ccargs = ['-std=c++11', '-O3']
+    args = ['-std=c++11', '-O3']
     global compiler
-    build([compiler], outfile, infile, compiler, ccargs, [])
+    build([compiler], outfile, infile, compiler, args)
 
 # Buildtype benchmark
 def buildBenchmark(infile, outfile):
     infile = os.path.join('./benchmark', infile)
-    ccargs = ['-std=c++11']
+    args = ['-std=c++11']
     global compiler
     if compiler == 'icpc':
-        ccargs.append('-fast')
+        args.append('-fast')
     else:
-        ccargs.append('-O3')
-    build([compiler], outfile, infile, compiler, ccargs, [])
+        args.append('-O3')
+    build([compiler], outfile, infile, compiler, args)
 
 # Buildtype googlebenchmark
 def buildGoogleBenchmark(infile, outfile):
     infile = os.path.join('./googlebenchmark', infile)
-    ccargs = ['-std=c++11', '-O3']
-    largs = ["-lbenchmark"]
+    args = ['-O3', '-lbenchmark']
     global compiler
     if compiler == 'icpc':
-        ccargs.append('-fast')
+        args.append('-fast')
     else:
-        ccargs.append('-O3')
-    build([compiler], outfile, infile, compiler, ccargs, largs)
+        args.append('-O3')
+    build([compiler], outfile, infile, compiler, args)
 
 # Check if a program is installed. This basically mimics the UNIX command which
 def checkProgram(program):
@@ -139,6 +143,11 @@ def main():
                         choices = ['clang', 'gcc', 'icc'],
                         help = 'Choose C++ compiler.',
                         dest = 'compiler')
+
+    parser.add_argument('--addflag', '-a',
+                        help = 'Add additional compiler flags passed as list.',
+                        nargs = '+',
+                        dest = 'additionalFlags')
 
     parser.add_argument('--clean', '-c',
                         action = 'store_true',
@@ -259,6 +268,12 @@ def main():
     elif args.compiler == 'icc':
         compiler = 'icpc'     # Intel C++ Compiler
 
+    # Check for additional compiler flags
+    global ccargs
+    if args.additionalFlags is not None:
+        print(args.additionalFlags)
+        ccargs + args.additionalFlags
+        
     # Invoke build based on buildtype
     if args.buildtype == 'test':
         buildTest(infile, outfile)

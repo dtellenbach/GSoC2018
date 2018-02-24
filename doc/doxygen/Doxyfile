@@ -112,7 +112,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = /Users/datell/Documents/GSoC2018/include
+INPUT                  = ./include \
+			 ./doc/doxygen/mainpage.dox
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
