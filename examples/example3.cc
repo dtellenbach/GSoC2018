@@ -8,7 +8,7 @@
  ******************************************************************************/
 
 #include <iostream>
-#include "../include/symmat.h"
+#include "../include/SymmetricMatrix.h"
 #include "../include/eigen3/Eigen/Eigen"
 
 #ifndef FORCE_STATIC_ASSERTION

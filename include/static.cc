@@ -2,28 +2,26 @@
 #include "../benchmark/Stopwatch.hpp"
 #include <random>
 #include <eigen3/Eigen/Eigen>
-#include "symmat.h"
+#include "SymmetricMatrix.h"
 
 int main() {
-    Eigen::Matrix<int, 3, 3> mat;
 
-    mat << 1,2,3,
-           2,2,3,
-           3,3,3;
 
-    Eigen::Matrix<int, 3, 3> mat_;
-    mat_ = mat + mat;
-
-    SymmetricMatrix<int, 3> symmat(mat);
-
-    std::cout << symmat << std::endl;
-    std::cout << std::endl;
+    Eigen::MatrixXi mat = Eigen::MatrixXi::Random(1000, 1000);
     
+    SymmetricMatrix<int> dynamicmat(mat);
+    SymmetricMatrix<int, 1000> staticmat(mat);
 
-    SymmetricMatrix<int, 3> res = symmat + mat;
-   
-    std::cout << res;
+    Stopwatch watch0, watch1;
 
-    
+    watch0.start();
+    dynamicmat = dynamicmat + dynamicmat;
+    watch0.stop();
+    watch1.start();
+    staticmat = staticmat + staticmat;
+    watch1.stop();
+
+    std::cout << "t0 = " << watch0.elapsed<std::chrono::microseconds>().count() << std::endl;
+    std::cout << "t1 = " << watch1.elapsed<std::chrono::microseconds>().count() << std::endl;
 }
 

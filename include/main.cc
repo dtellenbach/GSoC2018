@@ -2,7 +2,7 @@
 #include "../benchmark/Stopwatch.hpp"
 #include <random>
 #include <eigen3/Eigen/Eigen>
-#include "symmat.h"
+#include "SymmetricMatrix.h"
 #include <iomanip>
 
 

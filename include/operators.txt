@@ -1,0 +1,7 @@
+Manditory operators
+
+FIXED:
+    SymMat(fixed)  SymMat(dynamic) EigenMat(fixed) EigenMat(dynamic)
+ +      x               x               x               x       
+ -      x               x               x               x
+ *      x               x               x               x

@@ -1,5 +1,5 @@
 #include <benchmark/benchmark.h>
-#include "../include/symmat.h"
+#include "../include/SymmetricMatrix.h"
 #include "../include/eigen3/Eigen/Eigen"
 
 static void BM_SymMatAdd(benchmark::State& state) {

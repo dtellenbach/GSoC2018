@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../benchmark/Stopwatch.hpp"
 #include <eigen3/Eigen/Eigen>
-#include "symmat.h"
+#include "SymmetricMatrix.h"
 
 int main() {
     Eigen::MatrixXi eigenmat(3,3);

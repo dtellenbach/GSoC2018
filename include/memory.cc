@@ -4,7 +4,7 @@
 #include <vector>
 #include <thread>
 #include <eigen3/Eigen/Eigen>
-#include "symmat.h"
+#include "SymmetricMatrix.h"
 
 int main() {
     

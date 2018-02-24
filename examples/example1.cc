@@ -8,7 +8,7 @@
  *                  > Test if an Eigen::Matrix is symmetric or not             *
  ******************************************************************************/
 
-#include "../include/symmat.h"
+#include "../include/SymmetricMatrix.h"
 #include "../include/eigen3/Eigen/Eigen"
 #include <iostream>
 
@@ -41,6 +41,5 @@ int main() {
     } else {
         std::cout << "My Eigen::Matrix is not symmetric\n";
     }
-
-    symmat + mat;    
+   
 }

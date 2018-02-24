@@ -15,21 +15,6 @@ import subprocess
 
 compiler = 'g++'
 
-def run(file):
-    print("Running {}...".format(file))
-    try:
-        proc = subprocess.Popen([file], stdout=subprocess.PIPE, 
-                                 stderr=subprocess.PIPE)
-        stdout, stderr = proc.communicate()
-        if len(stderr) != 0:
-            print(stderr.decode("utf-8"), end = "")
-            exit()
-        if len(stdout) != 0:
-            print(stdout.decode("utf-8"), end = "")
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        outs, errs = proc.communicate()
-
 # Generic build function that gets called by all specific build functions with
 # different arguments depending on build type
 def build(dep, outfile, infile, cc, ccargs, largs):
@@ -46,7 +31,7 @@ def build(dep, outfile, infile, cc, ccargs, largs):
     # Join everything into a single list
     cmd = [cc] + ccargs + largs + ['-o'] + [outfile, infile]
     
-    print("Building {} ...".format(' '.join(cmd)))
+    print("Running {} ...".format(' '.join(cmd)))
     # Try to open subprocess and execute build command
     try:
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
@@ -57,24 +42,29 @@ def build(dep, outfile, infile, cc, ccargs, largs):
         if len(stderr) != 0:
             print(stderr.decode("utf-8"))
             exit()
+        else:
+            setBuilt("./config/built.txt", outfile + "\n")
     except subprocess.TimeoutExpired:
         proc.kill()
         outs, errs = proc.communicate()
 
     print("Done.")
 
+# Buildtype test
 def buildTest(infile, outfile):
     infile = os.path.join('./test', infile)
     ccargs = ['-std=c++11', '-Wall', '-Werror', '-Wpedantic']
     global compiler
     build([compiler], outfile, infile, compiler, ccargs, [])
 
+# Buildtype example
 def buildExample(infile, outfile):
     infile = os.path.join('./examples', infile)
     ccargs = ['-std=c++11', '-O3']
     global compiler
     build([compiler], outfile, infile, compiler, ccargs, [])
 
+# Buildtype benchmark
 def buildBenchmark(infile, outfile):
     infile = os.path.join('./benchmark', infile)
     ccargs = ['-std=c++11']
@@ -85,6 +75,7 @@ def buildBenchmark(infile, outfile):
         ccargs.append('-O3')
     build([compiler], outfile, infile, compiler, ccargs, [])
 
+# Buildtype googlebenchmark
 def buildGoogleBenchmark(infile, outfile):
     infile = os.path.join('./googlebenchmark', infile)
     ccargs = ['-std=c++11', '-O3']
@@ -96,6 +87,7 @@ def buildGoogleBenchmark(infile, outfile):
         ccargs.append('-O3')
     build([compiler], outfile, infile, compiler, ccargs, largs)
 
+# Check if a program is installed. This basically mimics the UNIX command which
 def checkProgram(program):
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
@@ -112,17 +104,24 @@ def checkProgram(program):
 
     return None
 
+def setBuilt(file, path):
+    with open(file, "a") as fh:
+        fh.write(path)
+
+def getBuilt(file):
+    ret = []
+    with open(file, "r") as fh:
+        for line in fh:
+            ret.append(line)
+    return ret
+
+# Find all files in a given directory with externsion .cc or .cpp
 def findFiles(path):
     ret = []
     for root, dir, files in os.walk(path):
         for file in files:
             if file.endswith('.cc') or file.endswith('.cpp'):
                 ret.append(os.path.join(root, file))
-    return ret
-
-def usageMsg():
-    ret = ('\nbuild.py --type {test,example,benchmark,googlebenchmark}\n'
-           '         --file FILE --out FILE [--run] [--list] [--clean][-h]')
     return ret
 
 def main():
@@ -132,44 +131,45 @@ def main():
                                                  'for the evaluation test for '
                                                  'the Google Summer of Code '
                                                  'Project <Faster Matrix '
-                                                 'Multiplication for ATLAS>',
-                                     usage = usageMsg())
+                                                 'Multiplication for ATLAS>')
 
 
     parser.add_argument('--type', '-t', 
                         choices = ['test', 'example', 'benchmark', 'googlebenchmark'],
-                        help = 'the type of executable you want to build',
+                        help = 'The type of executable you want to build',
                         dest = 'buildtype')
 
     parser.add_argument('--file', '-f',
                         metavar = "FILE",
-                        help = 'the file you want to build',
+                        help = 'The file you want to build',
                         dest = 'infile')
 
     parser.add_argument('--out', '-o',
                         metavar = "FILE",
-                        help = 'the name of the executable you want to build',
+                        help = 'The name of the executable you want to build',
                         dest = 'outfile')
-
-    parser.add_argument('--run', '-r',
-                        action = 'store_true',
-                        help = 'set if you want to run the executable after building',
-                        dest = 'runFlag')
 
     parser.add_argument('--list', '-l',
                         action = 'store_true',
-                        help = 'list all files and their build types and exit',
+                        help = 'List all files and their build types and exit',
                         dest = 'listFlag')
 
     parser.add_argument('--setcc', '-s',
                         choices = ['clang', 'gcc', 'icc'],
-                        help = 'choose C++ compiler',
+                        help = 'Choose C++ compiler.',
                         dest = 'compiler')
 
     parser.add_argument('--clean', '-c',
                         action = 'store_true',
                         dest = 'cleanFlag',
-                        help = 'clean all built binaries and exit')
+                        help = 'Clean all built binaries, documentation and exit')
+
+    parser.add_argument('--doxy', '-d',
+                        action = 'store_true',
+                        dest = 'doxyFlag',
+                        help = 'Build doxygen documentation, create a symbolic'
+                               ' to it at the top level of this repository.'
+                               ' Then exit.')
 
     args = parser.parse_args()
 
@@ -222,12 +222,24 @@ def main():
 
     # Check for --clean and, if set, clean
     if args.cleanFlag:
-        print("Cleaning directory ./bin...")
-        files = [ f for f in os.listdir("./bin") ]
+        print("Cleaning...")
+        files = getBuilt("./config/built.txt")
         for file in files:
-            os.remove(os.path.join('./bin', file))
-            print(" > Removed {}".format(os.path.join('./bin', file)))
+            os.remove(file)
+            print(" > Removed {}".format(file))
+            
         print("Done. Exit.")
+        os.remove("./config/built.txt")
+        return
+
+    # Check for --doxy
+    if args.doxyFlag:
+        print("Creating doxygen documentation...")
+        subprocess.call(["doxygen", "./doc/doxygen/Doxyfile"])
+        print("Creating symbolic link to documentation...")
+        if os.path.isfile("SymmetricMatrix.html"):
+            os.remove("SymmetricMatrix.html")
+        os.symlink("./doc/doxygen/html/index.html", "SymmetricMatrix.html")
         return
 
     # Check for --type and --file
@@ -260,22 +272,16 @@ def main():
     # Invoke build based on buildtype
     if args.buildtype == 'test':
         buildTest(infile, outfile)
-        if args.runFlag:
-            run(outfile)
     elif args.buildtype == 'example':
         buildExample(infile, outfile)
-        if args.runFlag:
-            run(outfile)
     elif args.buildtype == 'benchmark':
         buildBenchmark(infile, outfile)
-        if args.runFlag:
-            run(outfile)
     elif args.buildtype == 'googlebenchmark':
         buildGoogleBenchmark(infile, outfile)
-        if args.runFlag:
-            run(outfile)
+
 
 # if __file__ == 'build.py':
 #     main()
 
 main()
+
