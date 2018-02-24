@@ -42,8 +42,6 @@ def build(dep, outfile, infile, cc, ccargs, largs):
         if len(stderr) != 0:
             print(stderr.decode("utf-8"))
             exit()
-        else:
-            setBuilt("./config/built.txt", outfile + "\n")
     except subprocess.TimeoutExpired:
         proc.kill()
         outs, errs = proc.communicate()
@@ -101,19 +99,7 @@ def checkProgram(program):
             exe_file = os.path.join(path, program)
             if is_exe(exe_file):
                 return exe_file
-
     return None
-
-def setBuilt(file, path):
-    with open(file, "a") as fh:
-        fh.write(path)
-
-def getBuilt(file):
-    ret = []
-    with open(file, "r") as fh:
-        for line in fh:
-            ret.append(line)
-    return ret
 
 # Find all files in a given directory with externsion .cc or .cpp
 def findFiles(path):
@@ -144,11 +130,6 @@ def main():
                         help = 'The file you want to build',
                         dest = 'infile')
 
-    parser.add_argument('--out', '-o',
-                        metavar = "FILE",
-                        help = 'The name of the executable you want to build',
-                        dest = 'outfile')
-
     parser.add_argument('--list', '-l',
                         action = 'store_true',
                         help = 'List all files and their build types and exit',
@@ -168,8 +149,8 @@ def main():
                         action = 'store_true',
                         dest = 'doxyFlag',
                         help = 'Build doxygen documentation, create a symbolic'
-                               ' to it at the top level of this repository.'
-                               ' Then exit.')
+                               ' to it at the top level of this repository'
+                               ' and exit.')
 
     args = parser.parse_args()
 
@@ -222,24 +203,36 @@ def main():
 
     # Check for --clean and, if set, clean
     if args.cleanFlag:
-        print("Cleaning...")
-        files = getBuilt("./config/built.txt")
+        print("Cleaning directory ./bin...", end = "") 
+        files = [ f for f in os.listdir("./bin") ] 
         for file in files:
-            os.remove(file)
-            print(" > Removed {}".format(file))
-            
-        print("Done. Exit.")
-        os.remove("./config/built.txt")
+            os.remove(os.path.join("./bin", file))
+        print("Done.")
+        print("Cleaning directory ./doc/doxygen/html...", end = "")
+        subprocess.call(["rm", "-rf", "./doc/doxygen/html"])
+        print("Done.")
+        print("Cleaning symbolic link to doxygen...", end = "")
+        if os.path.isfile("./SymmetricMatrix.html"):
+            os.remove("./SymmetricMatrix.html")
+        print("Done.\nExit.")
         return
 
     # Check for --doxy
     if args.doxyFlag:
-        print("Creating doxygen documentation...")
-        subprocess.call(["doxygen", "./doc/doxygen/Doxyfile"])
-        print("Creating symbolic link to documentation...")
+        dxy = checkProgram("doxygen")
+        if dxy is None:
+            print(__file__ + ": Error: Doxygen not found. Exit.")
+            return
+        else:
+            print("Doxygen found: {}".format(dxy))
+        print("Creating doxygen documentation...", end = "")
+        subprocess.call([dxy, "./doc/doxygen/Doxyfile"])
+        print("Done.")
+        print("Creating symbolic link to documentation...", end = "")
         if os.path.isfile("SymmetricMatrix.html"):
             os.remove("SymmetricMatrix.html")
         os.symlink("./doc/doxygen/html/index.html", "SymmetricMatrix.html")
+        print("Done.\nExit.")
         return
 
     # Check for --type and --file
@@ -253,13 +246,10 @@ def main():
     else:
         infile = args.infile
 
-    # Check for --out
-    if args.outfile is None:
-        outfile = os.path.splitext(infile)[0] 
-        outfile = './bin/' + outfile
-    else:
-        outfile = args.outfile
-        
+    # Set outfile
+    outfile = os.path.splitext(infile)[0] 
+    outfile = './bin/' + outfile
+
     # Check for compiler
     global compiler
     if args.compiler is None or args.compiler == 'gcc':

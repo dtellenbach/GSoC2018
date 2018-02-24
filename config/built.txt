@@ -1,4 +1,0 @@
-./bin/example1
-./bin/example1
-./bin/example2
-./bin/example1

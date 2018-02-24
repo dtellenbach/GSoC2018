@@ -13,8 +13,8 @@
 #include "eigen3/Eigen/Eigen"
 
 /**
- * \class SymmetricMatrix
- * \brief Class for symmetric matrices
+ * \class SymmetricMatrix<typename Scalar, int Dimension = Eigen::Dimension>
+ * \brief Generic class template for symmetric matrices
  * 
  * Class for handling symmetric matrices. Only the upper triangular part of the
  * matrix is stored. Interoperability with instances of type Eigen::Matrix is 
@@ -73,6 +73,11 @@ class SymmetricMatrix {
         }
     }
 
+    /**
+     * \brief Construct an Eigen::Matrix with fixed size from the current
+     * instance of SymmetricMatrix
+     * \return Eigen::Matrix that contains the same elements as SymmetricMatrix
+     */
     Eigen::Matrix<Scalar, Dimension, Dimension>
     constructEigenMatrix() {
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
@@ -86,6 +91,21 @@ class SymmetricMatrix {
         return ret;
     }
 
+    /**
+     * \brief Checks if a matrix of type Eigen::Matrix is symmetric or not.
+     * \param mat Matrix of type Eigen::Matrix.
+     * \return True if mat is symmetric, false otherwise
+     */
+    static bool
+    isSymmetric(const Eigen::Matrix<Scalar, Dimension, Dimension>& mat) {
+        return (mat == mat.transpose())?true:false;
+    }
+
+    /**
+     * \brief Get a SymmetricMatrix with fixed dimension that is filled with
+     * random values.
+     * \return SymmetricMatrix filled with random values
+     */
     static SymmetricMatrix<Scalar, Dimension>
     Random() {
         return SymmetricMatrix<Scalar, Dimension>(
@@ -131,7 +151,7 @@ class SymmetricMatrix {
             for (int col = 0; col < Dimension; ++col) {
                 stream << mat(row, col) << " ";
             }
-            stream << "\n";
+            stream << (row == mat.dim() - 1)?:"\n";
         }
         return stream;
     }
@@ -358,7 +378,14 @@ constexpr int SymmetricMatrix<Scalar, Dimension>::calcArraySize() {
 }
 
 /**
- * Partial template specialisation (Dimension = Eigen::Dynamic)
+ * \class SymmetricMatrix<Scalar, Eigen::Dynamic>
+ * 
+ * Partial template specialisation where Dimension = Eigen::Dynamic.
+ * 
+ * This class represents symmetric matrices with dynamic dimension, i.e, the
+ * matrix dimension can be choosen and changes at runtime. This class is in
+ * particular suitable for large matrices as the matrix elements are stored
+ * an the heap.
  */
 template<typename Scalar>
 class SymmetricMatrix<Scalar, Eigen::Dynamic> {
@@ -393,7 +420,9 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     }
 
     /**
-     * Construtor that builds a symmetric matrix from a row major std::vector<T>.
+     * \brief Construtor that builds a symmetric matrix from a std::vector<T>.
+     * \param vec std::vector<Scalar> that contains the elements of the upper
+     * triangular part of the matrix
      */
     explicit SymmetricMatrix(const std::vector<Scalar>& vec) : elements(vec) {
         // Calculation of dimension
@@ -401,15 +430,17 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     }
 
     /**
-     * Constructor that builds a symmetric matrix from a row major std::vector<T>.
-     * The dimension is passed as an arguments and does not have to be calculated
+     * \brief Construtor that builds a symmetric matrix from a std::vector<T>.
+     * \param vec std::vector<Scalar> that contains the elements of the upper
+     * triangular part of the matrix
+     * \param dimension The dimension of the matrix. It doesn't have to be
+     * calculated.
      */
     SymmetricMatrix(const std::vector<Scalar>& vec, int dimension)
     : elements(vec), dimension(dimension) {}
 
     /**
      * \brief Checks if a matrix of type Eigen::Matrix is symmetric or not.
-     *
      * \param mat Matrix of type Eigen::Matrix.
      * \return True if mat is symmetric, false otherwise
      */
@@ -425,108 +456,52 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     }
 
     /**
+     * \brief Get a SymmetricMatrix with dynamic dimension that is filled with
+     * random values.
+     * \param dim Dimension of the dynamic matrix
+     * \return SymmetricMatrix filled with random values
+     */
+    static SymmetricMatrix<Scalar>
+    Random(int dim) {
+        return SymmetricMatrix<Scalar>(
+            static_cast<Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>>(
+                Eigen::Matrix<Scalar,
+                              Eigen::Dynamic,
+                              Eigen::Dynamic>::Random(dim, dim)));
+    }
+
+    /**
      * \brief Dimension of the symmetric matrix.
      *
      * Since any symmetric matrix is a square matrix no difference between
      * row-number and column-number has to be considered.
      * /return Dimension of the symmetric matrix.
      */
-    Eigen::Index dim() const {
+    size_t dim() const {
         return dimension;
     }
 
     /**
-     * Overloaded operator () to access elements of the matrix directly
-     * \param row Row index
-     * \param col Column index
-     * \retrun Matrix element at position (row, col)
+     * \brief Operator () to access a single element of the matrix
+     * 
+     * Overloaded operator () to access a single element of the current instance
+     * of SymmetricMatrix.
+     * 
+     * \param row The row index of the element
+     * \param col The column index of the element
+     * \return Reference to the elemenet (row, col) of the matrix
      */
-    Scalar operator()(int row, int col) const {
+    Scalar&
+    operator()(int row, int col) {
         if (row <= col) {
-            return elements[row * dimension - (row - 1 )* ((row - 1) + 1) / 2
+            return elements[row * dimension - (row - 1)*((row - 1) + 1)/2
                             + col - row];
         } else {
-            return elements[col * dimension - (col - 1) * ((col - 1) + 1) / 2
+            return elements[col * dimension - (col - 1)*((col - 1) + 1)/2
                             + row - col];
         }
     }
 
-    /**
-     * \brief Operator +
-     *
-     * Overloaded operator + for addition of a symmetric matrix with
-     * another symmetric matrix. Only the upper triangular part is taken into
-     * account.
-     * \param other The symmetric matrix to add with.
-     * \return Sum of the matrices.
-     */
-    SymmetricMatrix<Scalar>
-    operator+(const SymmetricMatrix<Scalar>& other) {
-        // Check if both dimensions match, if not throw exception (runtime case)
-        if (dim() != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
-        }
-
-        // Construct new matrix and set underlying std::vector
-        SymmetricMatrix<Scalar> ret(elements, dimension);
-
-        // Just add up both underlying std::vector
-        for (int i = 0; i < elements.size(); ++i) {
-           ret.elements[i] += other.elements[i];
-        }
-        return ret;
-    }
-
-    /**
-     * \brief Operator -
-     *
-     * Overloaded operator - for subtraction of a symmetric matrix with
-     * another symmetric matrix. Only the upper triangular part is taken into
-     * account.
-     * \param other The symmetric matrix to subtract with.
-     * \return Difference of both matrices.
-     */
-    SymmetricMatrix<Scalar>
-    operator-(const SymmetricMatrix<Scalar>& other) {
-        // Check if both dimensions match, if not throw exception (runtime case)
-        if (dim() != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
-        }
-        SymmetricMatrix<Scalar> ret(elements, dimension);
-        int numElements = elements.size();
-        for (int i = 0; i < numElements; ++i) {
-           ret.elements[i] -= other.elements[i];
-        }
-        return ret;
-    }
-
-    /**
-     * \brief Operator +
-     *
-     * Overloaded operator + for addition of symmetric matrix with arbitrary 
-     * matrix
-     * \param other Matrix of type Eigen::Matrix
-     * \return Sum of matrices
-     */
-    Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
-    operator+(const Eigen::Matrix<Scalar,
-                                  Eigen::Dynamic,
-                                  Eigen::Dynamic>& other) {
-        Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret;
-
-        // Check if both dimensions match, if not throw exception (runtime case)
-        if (dim() != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
-        }
-        for (int i = 0; i < dimension; i++) {
-            for (int j = i; j < dimension; j++) {
-                Scalar tmp = operator()(i, j);
-                ret(i, j) = tmp + other(i, j);
-                ret(j, i) = tmp + other(j, i);
-            }
-        }
-        return ret;
-    }
 
     /**
      * \brief Get Eigen::Matrix from SymmetricMatrix
@@ -552,70 +527,29 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
         return ret;
     }
 
+
     /**
-     * \brief Operator *
+     * \brief Operator << to push the elements of the matrix into an outstream.
      * 
-     * Overloaded operator * for multiplying to symmetric matrices.
-     * \param other Symmetric matrix to multiply with
-     * \return Eigen::Matrix that is the product of both symmetric matrices
+     * To print the matrix the operator << is overloaded. 
+     * 
+     * \param stream The outstream
+     * \param mat The matrix to push into stream
      */
-    Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
-    operator*(const SymmetricMatrix<Scalar>& other) {
-        // Check if both dimensions match, if not throw exception (runtime case)
-        if (dim() != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
-        }
-
-        // Currently can't beat Eigens multiplication mechanism. Since the
-        // product of a symmetric with an arbitrary matrix is not symmetric,
-        // we just mutliply instances of Eigen::Matrix
-        return Eigen::Matrix<Scalar,
-                             Eigen::Dynamic,
-                             Eigen::Dynamic>(constructEigenMatrix()
-                                             * other.constructEigenMatrix());
-    }
-
-    /**
-     * Overloaded operator * to multiply an arbitrary matrix with a symmetric
-     * matrix.
-     * \param other Arbitrary matrix to multiply with
-     * \return Product of the matrices
-     */
-    Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
-    operator*(const Eigen::Matrix<Scalar,
-                                  Eigen::Dynamic,
-                                  Eigen::Dynamic>& other) {
-        // Check if both dimensions match, if not throw exception (runtime case)
-        if (dim() != other.cols()) {
-            throw std::invalid_argument("Not matching dimension");
-        }
-        return Eigen::Matrix<Scalar,
-                             Eigen::Dynamic,
-                             Eigen::Dynamic>(constructEigenMatrix() * other);
-    }
-
-    /**
-     * \brief Operator << 
-     *
-     * Overloaded operator << to print the matrix in human friendly form.
-     * \param stream Output stream
-     * \param mat Matrix that is printed
-     * \return Output stream with representation of matrix pushed on
-     */
-    friend std::ostream& operator<<(std::ostream& stream,
-                                    SymmetricMatrix<Scalar>& mat) {
-        for (int row = 0; row < mat.dim(); row++) {
-            for (int col = 0; col < mat.dim(); col++) {
+    friend std::ostream&
+    operator<<(std::ostream& stream, SymmetricMatrix<Scalar>& mat) {
+        for (int row = 0; row < mat.dim(); ++row) {
+            for (int col = 0; col < mat.dim(); ++col) {
                 stream << mat(row, col) << " ";
             }
-            stream << "\n";
+            stream << (row == mat.dim() - 1)?:"\n";
         }
         return stream;
     }
 
  private:
     std::vector<Scalar> elements;
-    Eigen::Index dimension;
+    size_t dimension;
 };
 
 
