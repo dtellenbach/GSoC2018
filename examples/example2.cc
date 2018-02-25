@@ -3,43 +3,49 @@
  *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de> - 2018-02-20               *
  *                                                                             *
  *  Example 2 - Basic arithmetic operations                                    *
- *  Topics covered: > Construct a symmetric matrix from std::vector            *
- *                  > Perform addition for two symmetric matrices              *
- *                  > Perform multiplication for two symmetric matrices        *
+ *  Topics covered: > Difference between matrices with fixed and with dynamic  * 
+ *                    size                                                     *
+ *                  > Typedefs for several classes of class template           * 
+ *                    SymmetricMatrix                                          *
+ *                  > Constructing symmetric matrices filled with random       *
+ *                    values                                                   *
  ******************************************************************************/
 
-#include "../include/SymmetricMatrix.h"
-#include "../include/eigen3/Eigen/Eigen"
+#include <SymmetricMatrix.h>
+#include <eigen3/Eigen/Eigen>
 #include <iostream>
-#include <vector>
 
 int main() {
-    // // Construct an Eigen::Matrix with dynamic size, fill it with elements
-    // // and construct a symmetric matrix from it
-    // Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> mat(3,3);
+    // The class template SymmetricMatrix<T, N> expects to template parameters:
+    // The type of the elements and the dimension. A symmetric matrix of doubles
+    // with dimension 3 can be created like this:
+    SymmetricMatrix<double, 3> ssymmat;
 
-    // mat << 1,2,3,
-    //        1,2,3,
-    //        1,2,3;
+    // The above matrix has fixed dimension 3. This allows to do a lot of work
+    // at compile time. However if you want a more flexible matrix you can use
+    // the special dimension Eigen::Dynamic. This is in fact the default
+    // template parameter for the dimension.
+    SymmetricMatrix<double> dsymmat;    // same as SymmetricMatrix<double, Eigen::Dynamic> dsymmat;
 
-    // SymMat<int> symmat(mat);
+    // According to the design of Eigen, there exist typedefs for a lot of
+    // different concrete classes of SymmetricMatrix
+    SymmetricMatrixXcd csymmat;     // Matrix of complex doubles with dynamic dimension
+    SymmetricMatrix2i isymmat;      // Matrix of ints with fixed dimension 2
+   
+    // In the above cases no element of the matrices is set. The dynamic sized
+    // matrices have dimension 0 and nothing is stored. The fixed sized matrices
+    // have allocated all memory but the values are not initialized and can 
+    // contain arbitrary values.
 
-    // // Create an std::vector<int> and construct a symmetric matrix out of it.
-    // // The dimension of the matrix is calculated automatically from the numer
-    // // of elements the vector contains. However, passing it is optional.
-    // std::vector<int> vec = {2,2,2,3,3,4};
-    // SymMat<int> symmat2(vec);
+    // As shown in example1.cc a symmetric matrix can be constructed by passing
+    // an instance of Eigen::Matrix. There also exists the possibility to 
+    // construct a symmetric matrix filles with random values
+    SymmetricMatrix<double, 3> rndMatrix = SymmetricMatrix<double, 3>::Random();
 
-    // // Print both symmetric matrices
-    // std::cout << "Symmat:\n" << symmat << "\n"
-    //           << "Symmat2:\n" << symmat2 << "\n";
+    // In the dynamic case the dimension has to be passed as argument
+    SymmetricMatrixXi rndDmatrix = SymmetricMatrixXi::Random(3);
 
-    // // Perform addition, the result is again symmetric
-    // auto sum = symmat + symmat2;
-    // std::cout << "Sum:\n" << sum << "\n";
-
-    // // Perform multiplication, the result is in general not symmetric and 
-    // // therefore of type Eigen::Matrix
-    // auto product = symmat * symmat2;
-    // std::cout << "Product:\n" << product << "\n";
+    // Let's take a look at these matrices
+    std::cout << "Random matrix filled with doubles:\n" << rndMatrix << "\n" 
+              << "Random matrix filled with ints:\n"   << rndDmatrix << "\n";
 }

@@ -1,5 +1,16 @@
 /**
  * \mainpage 
- * \section Introduction
- * Hello how are you?
+ * # Introduction #
+ * This repository contains the evaluation test for the Google Summer of Code
+ * Project "Faster Matrix Algebra for ATLAS". The task of the evaluation test
+ * was to create a standalone class for symmetric matrices, i.e., matrices where
+ * mat(i, j) = mat(j, i) for all matrix elements holds. Only the upper 
+ * triangular part of the matrix should be stored.
+ * 
+ * 
+ * # Class Design #
+ * ## Storage Order ##
+ * ## Compile- and runtime ##
+ * # Benchmarks #
+ * # Future Work #
  */

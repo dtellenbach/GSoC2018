@@ -255,7 +255,7 @@ EXTRA_SEARCH_MAPPINGS  =
 # Configuration options related to the LaTeX output
 #---------------------------------------------------------------------------
 GENERATE_LATEX         = NO
-LATEX_OUTPUT           = latex
+LATEX_OUTPUT           = 
 LATEX_CMD_NAME         = latex
 MAKEINDEX_CMD_NAME     = makeindex
 COMPACT_LATEX          = NO
@@ -265,7 +265,7 @@ LATEX_HEADER           =
 LATEX_FOOTER           = 
 LATEX_EXTRA_STYLESHEET = 
 LATEX_EXTRA_FILES      = 
-PDF_HYPERLINKS         = YES
+PDF_HYPERLINKS         = NO
 USE_PDFLATEX           = YES
 LATEX_BATCHMODE        = NO
 LATEX_HIDE_INDICES     = NO

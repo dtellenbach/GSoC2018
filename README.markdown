@@ -52,23 +52,33 @@ Using GNU Make you can build the contained examples, benchmarks, tests and the d
     pdf-doc             Builds documentation of SymmetricMatrix as PDF
     clean               Removes built executables and documentation
 
+E.g., running ``make example`` builds all files contained in (./examples)[./examples] in ./bin. 
+
 ## Examples ##
 
 Several examples that demonstrate all features of the matrix class can be found in [./example](./doc/Documentation.pdf). In detail the following topics are covered:
 
 **[Example 1](./examples/example1.cc)**
-- Construct an instance of ``SymmetricMatrix`` from an instance of ``Eigen::Matrix``
+- Construct an instance of ``SymmetricMatrix`` from an instance of ``Eigen::Matrix`` (fixed size)
 - Print an instance of ``SymmetricMatrix`` into console
 - Test if an instance of ``Eigen::Matrix`` is symmetric
+- Access elements of the symmetric matrix directly and change their value
 
 **[Example 2](./examples/example2.cc)**
-- Construct an instance of ``SymmetricMatrix`` from ``std::vector```
-- Perform addition for two instances of ``SymmetricMatrix``
-- Perform multiplication for two instances of ``SymmetricMatrix``
+- Difference between matrices with fixed and with dynamic size
+- Typedefs for several classes of class template SymmetricMatrix
+- Constructing symmetric matrices filled with random values
 
-**[Example 2](./examples/example3.cc)**
-- Get to know the difference between fixed dimension (compile-time) and dynamic dimension (runtime)
-- See how fixed and dynamic dimensions react differently on terms of error reporting
+**[Example 3](./examples/example3.cc)**
+- Addition and subtraction for two instances of symmetric matrix
+- Addition and subtraction for symmetric matrices and arbitrary matrices
+
+**[Example 4](./examples/example4.cc)**
+- Multiplication for two instances of symmetric matrix
+- Multiplication of symmetric and arbitrary matrices
+
+**[Example 5](./examples/example5.cc)**
+- Runtime excpetions and compile-time errors
 
 
 

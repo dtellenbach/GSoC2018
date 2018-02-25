@@ -36,6 +36,8 @@ class SymmetricMatrix {
  public:
     /* Constructors */
 
+    SymmetricMatrix(){}
+
     /**
      * \brief Construct SymmetricMatrix from Eigen::Matrix
      * 
@@ -151,7 +153,7 @@ class SymmetricMatrix {
             for (int col = 0; col < Dimension; ++col) {
                 stream << mat(row, col) << " ";
             }
-            stream << ((row == mat.dim() - 1)?"\n":"\n");
+            stream << ((row == Dimension - 1)?"":"\n");
         }
         return stream;
     }
@@ -164,7 +166,7 @@ class SymmetricMatrix {
     SymmetricMatrix<Scalar, Dimension>
     operator+(const SymmetricMatrix<Scalar, Dimension>& other) {
         // Construct new matrix and set underlying std::array
-        SymmetricMatrix<Scalar, Dimension> ret(other);
+        SymmetricMatrix<Scalar, Dimension> ret(elements);
         // Just add up both underlying std::vector
         for (int i = 0; i < elements.size(); ++i) {
            ret.elements[i] += other.elements[i];
@@ -185,7 +187,7 @@ class SymmetricMatrix {
         }
 
         // Construct new matrix and set underlying std::array
-        SymmetricMatrix<Scalar, Dimension> ret(other);
+        SymmetricMatrix<Scalar, Dimension> ret(elements);
         // Just add up both underlying std::vector
         for (int i = 0; i < elements.size(); ++i) {
            ret.elements[i] += other.elements[i];
@@ -201,9 +203,10 @@ class SymmetricMatrix {
     SymmetricMatrix<Scalar, Dimension>
     operator-(const SymmetricMatrix<Scalar, Dimension>& other) {
         // Construct new matrix and set underlying std::array
-        SymmetricMatrix<Scalar, Dimension> ret(other);
+        SymmetricMatrix<Scalar, Dimension> ret(elements);
+
         // Just add up both underlying std::vector
-        for (int i = 0; i < elements.size(); ++i) {
+        for (int i = 0; i < calcArraySize(); ++i) {
            ret.elements[i] -= other.elements[i];
         }
         return ret;
@@ -222,7 +225,7 @@ class SymmetricMatrix {
         }
 
         // Construct new matrix and set underlying std::array
-        SymmetricMatrix<Scalar, Dimension> ret(other);
+        SymmetricMatrix<Scalar, Dimension> ret(elements);
         // Just add up both underlying std::vector
         for (int i = 0; i < elements.size(); ++i) {
            ret.elements[i] -= other.elements[i];
@@ -322,7 +325,7 @@ class SymmetricMatrix {
      * \return Product of both matrices
      */
     Eigen::Matrix<Scalar, Dimension, Dimension>
-    operator*(const SymmetricMatrix<Scalar, Dimension>& other) {
+    operator*(SymmetricMatrix<Scalar, Dimension>& other) {
         return Eigen::Matrix<Scalar, Eigen::Dynamic,
                              Eigen::Dynamic>(constructEigenMatrix()
                                              * other.constructEigenMatrix());
@@ -334,7 +337,7 @@ class SymmetricMatrix {
      * \return Product of both matrices
      */
     Eigen::Matrix<Scalar, Dimension, Dimension>
-    operator*(const SymmetricMatrix<Scalar>& other) {
+    operator*(SymmetricMatrix<Scalar>& other) {
         return Eigen::Matrix<Scalar, Eigen::Dynamic,
                              Eigen::Dynamic>(constructEigenMatrix()
                                              * other.constructEigenMatrix());
@@ -365,6 +368,9 @@ class SymmetricMatrix {
     }
 
  private:
+
+    SymmetricMatrix(const std::array<Scalar,
+        (Dimension*Dimension+Dimension)/2>& arr) : elements(arr){}
     /**
      * Calculate size of the underlying std::array at compiletime
      */
@@ -394,6 +400,14 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      * \brief Default constructor that constructs a 0-dimensional symmetric matrix
      */
     SymmetricMatrix() : dimension(0) {}
+
+    /**
+     * \brief Constructor that reserves size for the underlying container
+     * \param Dimension of the matrix
+     */
+    SymmetricMatrix(size_t dimension) : dimension(dimension) {
+        elements.reserve((dimension*dimension+dimension)/2);
+    }
 
     /**
      * \brief Constructor that builds a symmetric matrix from an Eigen::Matrix
@@ -513,7 +527,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      * symmetric matrix
      */
     Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
-    constructEigenMatrix() const {
+    constructEigenMatrix() {
         Eigen::Matrix<Scalar,
                       Eigen::Dynamic,
                       Eigen::Dynamic> ret(dimension, dimension);
@@ -651,7 +665,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      * \return Product of both matrices
      */
     Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
-    operator*(const SymmetricMatrix<Scalar>& other) {
+    operator*(SymmetricMatrix<Scalar>& other) {
         return Eigen::Matrix<Scalar, Eigen::Dynamic,
                              Eigen::Dynamic>(constructEigenMatrix()
                                              * other.constructEigenMatrix());
