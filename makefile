@@ -1,4 +1,4 @@
-CC = clang++
+CC = g++
 BINDIR := bin
 SRCEXT := cc
 EXAMPLEDIR := examples
@@ -50,14 +50,10 @@ endif
 	ln -sf $(DOXYDIR)/html/index.html SymmetricMatrix.html
 
 pdf-doc:
-ifndef DOXYGEN
-	$(error "Could not find doxygen")
-endif
 ifndef pdflatex
 	$(error "Could not find pdflatex")
 endif
 	
-
 clean:
 	$(RM) -f $(BINDIR)/*; $(RM) -f SymmetricMatrix.html; $(RM) -rf $(DOXYDIR)/html
 
