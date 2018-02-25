@@ -34,7 +34,6 @@ template<typename Scalar, int Dimension = Eigen::Dynamic>
 class SymmetricMatrix {
  public:
     /* Constructors */
-
     SymmetricMatrix(){}
 
     /**
@@ -187,8 +186,9 @@ class SymmetricMatrix {
 
         // Construct new matrix and set underlying std::array
         SymmetricMatrix<Scalar, Dimension> ret(elements);
-        // Just add up both underlying std::vector
-        for (int i = 0; i < elements.size(); ++i) {
+
+        // Just add up the underlying std::array and std::vector
+        for (int i = 0; i < calcArraySize(); ++i) {
            ret.elements[i] += other.elements[i];
         }
         return ret;
@@ -395,6 +395,14 @@ constexpr int SymmetricMatrix<Scalar, Dimension>::calcArraySize() {
 template<typename Scalar>
 class SymmetricMatrix<Scalar, Eigen::Dynamic> {
  public:
+    
+    /**
+     * This is necessary since SymmetricMatrix<Scalar, Dimension> need to 
+     * access private members of SymmetricMatrix<Scalar, Eigen::Dynamic>
+     */
+    template<typename _Scalar, int _Dimension>
+    friend class SymmetricMatrix;
+
     /**
      * \brief Default constructor that constructs a 0-dimensional symmetric matrix
      */

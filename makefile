@@ -40,7 +40,7 @@ else
 endif
 
 test:
-	$(foreach src, $(wildcard $(TESTDIR)/*.$(SRCEXT)), $(CC) $(INC) $(DEBUGFLAGS) $(LDFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
+	$(foreach src, $(wildcard $(TESTDIR)/*.$(SRCEXT)), $(CC) $(INC) $(DEBUGFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
 
 html-doc:
 ifndef DOXYGEN
