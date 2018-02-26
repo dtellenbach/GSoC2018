@@ -1,6 +1,8 @@
 /*******************************************************************************
- *  Google Summer of Code - Faster Matrix Multiplication for ATLAS             *
- *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de> - 2018-02-20               *
+ *  This file is part of the evaluation test of the Google Summer of Code 2018 *
+ *  project "Faster Matrix Algebra for ATLAS".                                 *
+ *                                                                             *
+ *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de>                            *
  *                                                                             *
  *  Example 1 - Basics                                                         *
  *  Topics covered: > Construct a symmetric matrix from an Eigen::Matrix of    *

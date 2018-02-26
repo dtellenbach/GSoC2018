@@ -1,3 +1,13 @@
+/*******************************************************************************
+ *  This file is part of the evaluation test of the Google Summer of Code 2018 *
+ *  project "Faster Matrix Algebra for ATLAS".                                 *
+ *                                                                             *
+ *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de>                            *
+ *                                                                             *
+ *  Test - Dynamic Dynamic                                                     *
+ *  Operations between instances of SymmetricMatrix of dynamic size            *
+*******************************************************************************/
+
 #include <iostream>
 #include <functional>
 

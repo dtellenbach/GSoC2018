@@ -1,4 +1,15 @@
+/*******************************************************************************
+ *  This file is part of the evaluation test of the Google Summer of Code 2018 *
+ *  project "Faster Matrix Algebra for ATLAS".                                 *
+ *                                                                             *
+ *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de>                            *
+ *                                                                             *
+ *  Test - Excepetion                                                          *
+ *  Test if exceptions get thrown properly                                     *
+*******************************************************************************/
+
 #include <iostream>
+
 #include <SymmetricMatrix.h>
 #include <eigen3/Eigen/Eigen>
 

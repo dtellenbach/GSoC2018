@@ -8,8 +8,7 @@ The repository is structured as follows
 
     GSoC2018
     ├── README.markdown             
-    ├── makefile 
-    ├── build.py                  
+    ├── makefile                 
     ├── doc     
     |   ├── doxygen
     │   │   ├── Doxyfile
@@ -21,13 +20,10 @@ The repository is structured as follows
     │   ├── SymmetricMatrix.h
     │   └── eigen3
     ├── benchmark
-    │   ├── access.cc
-    │   ├── addition1.cc
-    │   ├── addition2.cc
-    │   ├── multiplication1.cc
-    │   ├── multiplication2.cc
-    │   ├── memory.cc
-    │   └── google
+    │   ├── add_fixed.cc
+    │   ├── add_dynamic.cc
+    │   ├── mult_fixed.cc
+    │   └── mult_fixed.cc
     ├── examples
     │   ├── example1.cc
     │   ├── example2.cc
@@ -43,8 +39,7 @@ Since this is an experimental project, Eigen is included in the ``./include`` di
 Using GNU Make you can build the contained examples, benchmarks, tests and the documenation. The following make directives are available:
 
     example             Builds the examples
-    benchmark           Builds the benchmarks
-    googlebenchmark     Builds benchmarks using Google's benchmark library
+    benchmark           Builds the benchmarks using Google's benchmark library
     test                Builds tests
     doc-code            Builds the Doxygen documentation of SymmetricMatrix as HTML
     doc-proj            Builds documentation about the project and its design as PDF
@@ -90,35 +85,25 @@ Several examples that demonstrate all available features of the SymmetricMatrix 
 
 ## Benchmarks ##
 
-The repository contains two types of benchmarks: Benchmarks using a selfcontained (Stopwatch)(benchmark/Stopwatch.hpp) class and benchmarks using the Google benchmark library. In detail the following benchmarks are included:
+If the Google benchmark library is installed the following benchmarks can be run. Since benchmarking is a complex task this repository does not contain standalone benchmarks. They would most likely provide unreliable results.
 
-### Native Benchmarks ###
+Note that using the makefile requires the Google benchmark header to be contained in one of your include paths. If not so, change the makefile or try to compile the benchmarks *by hand*.
 
-**[access.cc](benchmark/access.cc):** Measures the time consumption of accessing all elements of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
+All benchmark results including their graphical representations can be found in the project documentation.
 
-**[add_fixed.cc](benchmark/add_fixed.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
+**[add_fixed_g.cc](benchmark/add_fixed_g.cc):** Measures the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
 
-**[add_dynamic.cc](benchmark/add_dynamic.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
+**[add_dynamic_g.cc](benchmark/add_dynamic.cc):** Measures the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
 
-**[mult_fixed.cc](benchmark/mult_fixed.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
+**[mult_fixed_g.cc](benchmark/mult_fixed_g.cc):** Measures the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
 
-**[mult_dynamic.cc](benchmark/mult_dynamic.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
-
-### Google Benchmarks ###
-
-**[add_fixed_g.cc](googlebenchmark/add_fixed_g.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
-
-**[add_dynamic_g.cc](googlebenchmark/add_dynamic.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
-
-**[mult_fixed_g.cc](googlebenchmark/mult_fixed_g.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
-
-**[mult_dynamic_g.cc](googlebenchmark/mult_dynamic_g.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
+**[mult_dynamic_g.cc](benchmark/mult_dynamic_g.cc):** Measures the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
 
 ## Tests ##
 
 All tests work by first constructing an instance of Eigen::Matrix, make sure that this instance is symmetric and constructing instances of SymmetricMatrix by passing the constructed Eigen::Matrix. Then any operation is performed for both the SymmetricMatrix and the Eigen::Matrix. If both operations yield the same result, the test is passed. In fact the all tests check if instances of SymmetricMatrix behave like symantically identical instances of Eigen::Matrix.
 
-Three tests are includes:
+These four tests are included:
 
 **[fixed_fixed.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of fixed dimension. Several datatypes and matrix dimensions are tested.
 
@@ -126,4 +111,4 @@ Three tests are includes:
 
 **[dynamic_dynamic.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of dynamic dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
 
-**[exception.cc](test/exception.cc):** Test edge cases that should throw expection.
+**[exception.cc](test/exception.cc):** Tests edge cases that should throw expection.

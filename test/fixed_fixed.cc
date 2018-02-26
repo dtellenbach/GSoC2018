@@ -1,3 +1,13 @@
+/*******************************************************************************
+ *  This file is part of the evaluation test of the Google Summer of Code 2018 *
+ *  project "Faster Matrix Algebra for ATLAS".                                 *
+ *                                                                             *
+ *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de>                            *
+ *                                                                             *
+ * Test - Fixed Fixed                                                          *
+ * Operations between instances of SymmetricMatrix of fixed size               *
+*******************************************************************************/
+
 #include <iostream>
 #include <functional>
 

@@ -1,18 +1,19 @@
 /*******************************************************************************
- *  Google Summer of Code - Faster Matrix Multiplication for ATLAS             *
- *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de> - 2018-02-20               *
+ *  This file is part of the evaluation test of the Google Summer of Code 2018 *
+ *  project "Faster Matrix Algebra for ATLAS".                                 *
+ *                                                                             *
+ *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de>                            *
  *                                                                             *
  *  Benchmark - Access                                                         *
  *  Time consumption of accessing all elements of an instance of               * 
- * SymmetricMatrix and Eigen::Matrix for different dimensions.                 *
+ *  SymmetricMatrix and Eigen::Matrix for different dimensions.                *
  ******************************************************************************/
+
+#include <iostream>
 
 #include <SymmetricMatrix.h>
 #include <eigen3/Eigen/Eigen>
-#include <iostream>
-#include "Stopwatch.hpp"
-
-
+#include "Stopwatch.h"
 
 int main() {
     const int maxDim = 50000;
@@ -27,7 +28,6 @@ int main() {
         Stopwatch watch0, watch1;
 
         // Eigen::Matrix
-        
         watch0.start();
         for (int i = 0; i < dim; ++i) {
             for (int j = 0; j < dim; ++j) {
@@ -35,6 +35,7 @@ int main() {
             }
         }
         watch0.stop();
+
         // SymmetricMatrix
         watch1.start();
         for (int i = 0; i < dim; ++i) {
@@ -49,5 +50,5 @@ int main() {
                   << watch1.elapsed<std::chrono::milliseconds>().count() 
                   << "ms\n";
     }
-    printf("%llu\n", sum);
+    printf("%llu\n", sum); // To prevent compiler optimization
 }
