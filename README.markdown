@@ -96,23 +96,23 @@ The repository contains two types of benchmarks: Benchmarks using a selfcontaine
 
 **[access.cc](benchmark/access.cc):** Measures the time consumption of accessing all elements of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
 
-**[add_fixed.cc](benchmark/add_fixed.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
+**[add_fixed.cc](benchmark/add_fixed.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
 
-**[add_dynamic.cc](benchmark/add_dynamic.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
+**[add_dynamic.cc](benchmark/add_dynamic.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
 
-**[mult_fixed.cc](benchmark/mult_fixed.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
+**[mult_fixed.cc](benchmark/mult_fixed.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
 
-**[mult_dynamic.cc](benchmark/mult_dynamic.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
+**[mult_dynamic.cc](benchmark/mult_dynamic.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
 
 ### Google Benchmarks ###
 
-**[add_fixed_g.cc](googlebenchmark/add_fixed_g.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
+**[add_fixed_g.cc](googlebenchmark/add_fixed_g.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
 
-**[add_dynamic_g.cc](googlebenchmark/add_dynamic.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
+**[add_dynamic_g.cc](googlebenchmark/add_dynamic.cc):** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
 
-**[mult_fixed_g.cc](googlebenchmark/mult_fixed_g.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
+**[mult_fixed_g.cc](googlebenchmark/mult_fixed_g.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
 
-**[mult_dynamic_g.cc](googlebenchmark/mult_dynamic_g.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
+**[mult_dynamic_g.cc](googlebenchmark/mult_dynamic_g.cc):** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
 
 ## Tests ##
 
