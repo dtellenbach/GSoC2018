@@ -40,7 +40,7 @@ int main() {
 
     // The symmetric matrix has been constructed although the Eigen::Matrix
     // was not symmetric. Only the upper triangular part was considered. If
-    // you want to check ifs an Eigen::Matrix is symmetric you can do somethin
+    // you want to check ifs an Eigen::Matrix is symmetric you can do something
     // like this:
     if (SymmetricMatrix<int, 3>::isSymmetric(eigenmat)) {
         std::cout << "My Eigen::Matrix is symmetric\n";

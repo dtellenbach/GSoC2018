@@ -41,7 +41,7 @@ int main() {
 
     // As shown in example1.cc a symmetric matrix can be constructed by passing
     // an instance of Eigen::Matrix. There also exists the possibility to 
-    // construct a symmetric matrix filles with random values
+    // construct a symmetric matrix filled with random values
     SymmetricMatrix<double, 3> rndMatrix = SymmetricMatrix<double, 3>::Random();
 
     // In the dynamic case the dimension has to be passed as argument

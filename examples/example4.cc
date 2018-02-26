@@ -24,12 +24,12 @@ int main() {
     SymmetricMatrixXd dsymmat(eigenmat);    // Dynamic size
     SymmetricMatrix3d ssymmat(eigenmat);    // Fixed size
 
-    // Mutliply both symmetric matrices. The result will be Eigen::Matrix
+    // Multiply both symmetric matrices. The result will be Eigen::Matrix
     Eigen::MatrixXd res = ssymmat * dsymmat;
     std::cout << "Eigen::Matrix = SymmetricMatrix * SymmetricMatrix\n";
     std::cout << ssymmat << "\n*\n" << dsymmat << "\n=\n" << res << "\n\n";
 
-    // Multipy the symmetric matrix and the Eigen::Matirx
+    // Multiply the symmetric matrix and the Eigen::Matrix
     res = ssymmat * eigenmat;
     std::cout << "Eigen::Matrix = SymmetricMatrix * EigenMatrix\n";
     std::cout << ssymmat << "\n*\n" << dsymmat << "\n=\n" << res << "\n\n";

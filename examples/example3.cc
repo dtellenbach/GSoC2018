@@ -46,6 +46,6 @@ int main() {
     Eigen::Matrix3i result = symmat + eigenmat;
     std::cout << symmat << "\n+\n" << eigenmat << "\n=\n" << result << "\n\n";
 
-    // You currently can't do somethin like eigenmat + symmat, since this would
+    // You currently can't do smoothing like eigenmat + symmat, since this would
     // require modification of the Eigen::Matrix class
 }

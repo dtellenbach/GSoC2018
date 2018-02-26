@@ -24,9 +24,9 @@
  * dimension of the matrix. However the dimension has the default value
  * Eigen::Dynamic.
  * 
- * When a fixed dimension is choosen a lot of work can be done during compiletime
+ * When a fixed dimension is chosen a lot of work can be done during compile-time
  * and all matrix elements are stored on stack. Fixed dimensions are therefore
- * only suitable for small matrices (a few hundert to a tousand elements). If
+ * only suitable for small matrices (a few hundred to a thousand elements). If
  * the dimension is set to Eigen::Dynamic (or not at all) all elements are stored
  * on the heap but all the work is done during runtime.
  */
@@ -41,7 +41,7 @@ class SymmetricMatrix {
      * 
      * Construct an instance of SymmetricMatrix with fixed dimension by passing
      * an instance of Eigen::Matrix with fixed dimension. This construction
-     * is completly done at compile-time.
+     * is completely done at compile-time.
      * 
      * \param mat Instance of Eigen::Matrix with fixed dimension
      */
@@ -124,7 +124,7 @@ class SymmetricMatrix {
      * 
      * \param row The row index of the element
      * \param col The column index of the element
-     * \return Reference to the elemenet (row, col) of the matrix
+     * \return Reference to the element (row, col) of the matrix
      */
     Scalar&
     operator()(int row, int col) {
@@ -138,11 +138,11 @@ class SymmetricMatrix {
     }
 
     /**
-     * \brief Operator << to push the elements of the matrix into an outstream.
+     * \brief Operator << to push the elements of the matrix into an out-stream.
      * 
      * To print the matrix the operator << is overloaded. 
      * 
-     * \param stream The outstream
+     * \param stream The out-stream
      * \param mat The matrix to push into stream
      */
     friend std::ostream&
@@ -381,7 +381,7 @@ class SymmetricMatrix {
     SymmetricMatrix(const std::array<Scalar,
         (Dimension*Dimension+Dimension)/2>& arr) : elements(arr){}
     /**
-     * Calculate size of the underlying std::array at compiletime
+     * Calculate size of the underlying std::array at compile-time
      */
     static constexpr int calcArraySize();
     std::array<Scalar, calcArraySize()> elements;
@@ -398,7 +398,7 @@ constexpr int SymmetricMatrix<Scalar, Dimension>::calcArraySize() {
  * Partial template specialisation where Dimension = Eigen::Dynamic.
  * 
  * This class represents symmetric matrices with dynamic dimension, i.e, the
- * matrix dimension can be choosen and changes at runtime. This class is in
+ * matrix dimension can be chosen and changes at runtime. This class is in
  * particular suitable for large matrices as the matrix elements are stored
  * an the heap.
  */
@@ -446,7 +446,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     }
 
     /**
-     * \brief Construtor that builds a symmetric matrix from a std::vector<T>.
+     * \brief Constructor that builds a symmetric matrix from a std::vector<T>.
      * \param vec std::vector<Scalar> that contains the elements of the upper
      * triangular part of the matrix
      */
@@ -456,7 +456,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     }
 
     /**
-     * \brief Construtor that builds a symmetric matrix from a std::vector<T>.
+     * \brief Constructor that builds a symmetric matrix from a std::vector<T>.
      * \param vec std::vector<Scalar> that contains the elements of the upper
      * triangular part of the matrix
      * \param dimension The dimension of the matrix. It doesn't have to be
@@ -519,7 +519,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      * 
      * \param row The row index of the element
      * \param col The column index of the element
-     * \return Reference to the elemenet (row, col) of the matrix
+     * \return Reference to the element (row, col) of the matrix
      */
     Scalar&
     operator()(int row, int col) {
@@ -559,11 +559,11 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
 
 
     /**
-     * \brief Operator << to push the elements of the matrix into an outstream.
+     * \brief Operator << to push the elements of the matrix into an out-stream.
      * 
      * To print the matrix the operator << is overloaded. 
      * 
-     * \param stream The outstream
+     * \param stream The out-stream
      * \param mat The matrix to push into stream
      */
     friend std::ostream&

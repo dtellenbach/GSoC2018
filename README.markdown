@@ -33,10 +33,10 @@ The repository is structured as follows
 
 ## How to build ##
 
-The SymmatricMatrix class is header only, therefore you can just include the file ``./include/SymmatricMatrix.h`` and give it a try.
+The SymmetricMatrix class is header only, therefore you can just include the file ``./include/SymmatricMatrix.h`` and give it a try.
 Since this is an experimental project, Eigen is included in the ``./include`` directory. There is no need to have it in one of your include directories. Actually you can build everything except the Google benchmarks with nothing installed but a compiler that supports C++11.
 
-Using GNU Make you can build the contained examples, benchmarks, tests and the documenation. The following make directives are available:
+Using GNU Make you can build the contained examples, benchmarks, tests and the documentation. The following make directives are available:
 
     example             Builds the examples
     benchmark           Builds the benchmarks using Google's benchmark library
@@ -83,7 +83,7 @@ Several examples that demonstrate all available features of the SymmetricMatrix 
 - Multiplication of symmetric and arbitrary matrices
 
 **[Example 5](./examples/example5.cc)**
-- Runtime excpetions and compile-time errors
+- Runtime exceptions and compile-time errors
 
 ## Benchmarks ##
 
@@ -103,14 +103,14 @@ All benchmark results including their graphical representations can be found in 
 
 ## Tests ##
 
-All tests work by first constructing an instance of Eigen::Matrix, make sure that this instance is symmetric and constructing instances of SymmetricMatrix by passing the constructed Eigen::Matrix. Then any operation is performed for both the SymmetricMatrix and the Eigen::Matrix. If both operations yield the same result, the test is passed. In fact the all tests check if instances of SymmetricMatrix behave like symantically identical instances of Eigen::Matrix.
+All tests work by first constructing an instance of Eigen::Matrix, make sure that this instance is symmetric and constructing instances of SymmetricMatrix by passing the constructed Eigen::Matrix. Then any operation is performed for both the SymmetricMatrix and the Eigen::Matrix. If both operations yield the same result, the test is passed. In fact the all tests check if instances of SymmetricMatrix behave like semantically identical instances of Eigen::Matrix.
 
 These four tests are included:
 
-**[fixed_fixed.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of fixed dimension. Several datatypes and matrix dimensions are tested.
+**[fixed_fixed.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of fixed dimension. Several data types and matrix dimensions are tested.
 
-**[fixed_dynamic.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
+**[fixed_dynamic.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of dynamic dimension. Several data types and matrix dimensions are tested.
 
-**[dynamic_dynamic.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of dynamic dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
+**[dynamic_dynamic.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of dynamic dimension with symmetric matrices of dynamic dimension. Several data types and matrix dimensions are tested.
 
-**[exception.cc](tests/exception.cc):** Tests edge cases that should throw expection.
+**[exception.cc](tests/exception.cc):** Tests edge cases that should throw exception.
