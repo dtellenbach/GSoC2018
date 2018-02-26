@@ -52,21 +52,21 @@ Using GNU Make you can build the contained examples, benchmarks, tests and the d
     doc-proj            Builds documentation about the project and its design as PDF
     clean               Removes built executables and documentation
 
-E.g., running ``make example`` builds all files contained in (./examples)[./examples] in ./bin. 
+E.g., running ``make example`` builds all files contained in [./examples](./examples) in ./bin. 
 
 ### Dependencies ###
 
-To build examples, benchmarks and tests a C++ compiler that supports C++11 is required. As default compiler ``gcc`` is chosen but you can change the (makefile)[makefile] to other compilers like ``clang`` or ``icc``.
+To build examples, benchmarks and tests a C++ compiler that supports C++11 is required. As default compiler ``gcc`` is chosen but you can change the [makefile](makefile) to other compilers like ``clang`` or ``icc``.
 
-To build the Google benchmarks you need to ensure that the corresponding library and headers are available. See (here)[https://github.com/google/benchmark] for further information about the Google benchmark library.
+To build the Google benchmarks you need to ensure that the corresponding library and headers are available. See [here](https://github.com/google/benchmark) for further information about the Google benchmark library.
 
-To build the Doxygen documentation of the SymmetricMatrix class Doxygen must be installed. See (here)[https://www.stack.nl/~dimitri/doxygen/] for further information about Doxygen.
+To build the Doxygen documentation of the SymmetricMatrix class Doxygen must be installed. See [here][https://www.stack.nl/~dimitri/doxygen/] for further information about Doxygen.
 
-To build the project documentation pdflatex is required. See (here)[https://www.tug.org/applications/pdftex/] for further information about pdflatex.
+To build the project documentation pdflatex is required. See [here](https://www.tug.org/applications/pdftex/) for further information about pdflatex.
 
 ## Examples ##
 
-Several examples that demonstrate all available features of the SymmetricMatrix class can be found in [./example](./doc/Documentation.pdf). In detail the following topics are covered:
+Several examples that demonstrate all available features of the SymmetricMatrix class can be found in [./example](./example). In detail the following topics are covered:
 
 **[Example 1](./examples/example1.cc)**
 - Construct an instance of ``SymmetricMatrix`` from an instance of ``Eigen::Matrix`` (fixed size)
@@ -89,6 +89,14 @@ Several examples that demonstrate all available features of the SymmetricMatrix 
 
 **[Example 5](./examples/example5.cc)**
 - Runtime excpetions and compile-time errors
+
+## Benchmarks ##
+
+The repository contains two types of benchmarks: Benchmarks using a selfcontained (Stopwatch)(benchmark/Stopwatch.hpp) class and benchmarks using the Google benchmark library. In detail the following benchmarks are included:
+
+### Native Benchmarks ###
+
+**[access.cc](access.cc):** Measures the time consumption of accessing all elements of instances of SymmetricMatrix and Eigen::Matrix for different matrix dimension.
 
 
 
