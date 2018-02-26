@@ -38,4 +38,7 @@
 .vscode
 
 # Doxygen 
-./doc/doxygen/html
+doc/doxygen/html
+
+# Bin
+bin

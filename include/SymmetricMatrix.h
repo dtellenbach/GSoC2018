@@ -397,13 +397,6 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
  public:
     
     /**
-     * This is necessary since SymmetricMatrix<Scalar, Dimension> need to 
-     * access private members of SymmetricMatrix<Scalar, Eigen::Dynamic>
-     */
-    template<typename _Scalar, int _Dimension>
-    friend class SymmetricMatrix;
-
-    /**
      * \brief Default constructor that constructs a 0-dimensional symmetric matrix
      */
     SymmetricMatrix() : dimension(0) {}
@@ -692,6 +685,12 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     }
 
  private:
+    /**
+     * This is necessary since SymmetricMatrix<Scalar, Dimension> need to 
+     * access private members of SymmetricMatrix<Scalar, Eigen::Dynamic>
+     */
+    template<typename _Scalar, int _Dimension>
+    friend class SymmetricMatrix;
     std::vector<Scalar> elements;
     size_t dimension;
 };

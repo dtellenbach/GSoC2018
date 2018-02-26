@@ -12,8 +12,11 @@
 #include <iostream>
 #include "Stopwatch.hpp"
 
+
+
 int main() {
     const int maxDim = 50000;
+    uint64_t sum = 0;
 
     std::cout << "Size\tEigen::Matrix\tSymmetricMatrix\n"
               << "***************************************\n";
@@ -24,7 +27,7 @@ int main() {
         Stopwatch watch0, watch1;
 
         // Eigen::Matrix
-        int sum = 0;
+        
         watch0.start();
         for (int i = 0; i < dim; ++i) {
             for (int j = 0; j < dim; ++j) {
@@ -32,9 +35,7 @@ int main() {
             }
         }
         watch0.stop();
-
         // SymmetricMatrix
-        sum = 0;
         watch1.start();
         for (int i = 0; i < dim; ++i) {
             for (int j = 0; j < dim; ++j) {
@@ -42,11 +43,11 @@ int main() {
             }
         }
         watch1.stop();
-
         std::cout << dim << "\t" 
                   << watch0.elapsed<std::chrono::milliseconds>().count() 
                   << "ms\t\t"
                   << watch1.elapsed<std::chrono::milliseconds>().count() 
                   << "ms\n";
     }
+    printf("%llu\n", sum);
 }
