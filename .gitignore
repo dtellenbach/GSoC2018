@@ -39,6 +39,7 @@
 
 # Doxygen 
 doc/doxygen/html
+SymmetricMatrix.html
 
 # Bin
 bin

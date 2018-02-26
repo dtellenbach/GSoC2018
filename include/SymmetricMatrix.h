@@ -413,7 +413,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
 
     /**
      * \brief Constructor that reserves size for the underlying container
-     * \param Dimension of the matrix
+     * \param dimension Dimension of the matrix
      */
     SymmetricMatrix(size_t dimension) : dimension(dimension) {
         elements.reserve((dimension*dimension+dimension)/2);
@@ -711,10 +711,8 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     }
 
  private:
-    /**
-     * This is necessary since SymmetricMatrix<Scalar, Dimension> need to 
-     * access private members of SymmetricMatrix<Scalar, Eigen::Dynamic>
-     */
+    // This is necessary since the generic class template needs to access
+    // private members of this partial specialized class template
     template<typename _Scalar, int _Dimension>
     friend class SymmetricMatrix;
     std::vector<Scalar> elements;
@@ -722,15 +720,15 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
 };
 
 /**
- * \typedef SymmetricMatrix of ints with dynamic dimension
+ * \brief SymmetricMatrix of ints with dynamic dimension
  */
 typedef SymmetricMatrix<int, Eigen::Dynamic> SymmetricMatrixXi;
 /**
- * \typedef SymmetricMatrix of floats with dynamic dimension
+ * \brief SymmetricMatrix of floats with dynamic dimension
  */
 typedef SymmetricMatrix<float, Eigen::Dynamic> SymmetricMatrixXf;
 /**
- * \typedef SymmetricMatrix of doubles with dynamic dimension
+ * \brief SymmetricMatrix of doubles with dynamic dimension
  */
 typedef SymmetricMatrix<double, Eigen::Dynamic> SymmetricMatrixXd;
 /**

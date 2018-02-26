@@ -1,16 +1,45 @@
 /**
  * \mainpage 
- * # Introduction #
- * This repository contains the evaluation test for the Google Summer of Code
- * Project "Faster Matrix Algebra for ATLAS". The task of the evaluation test
- * was to create a standalone class for symmetric matrices, i.e., matrices where
- * mat(i, j) = mat(j, i) for all matrix elements holds. Only the upper 
- * triangular part of the matrix should be stored.
- * 
- * 
- * # Class Design #
- * ## Storage Order ##
- * ## Compile- and runtime ##
- * # Benchmarks #
- * # Future Work #
+ * \section sec1 Example Usage
+ * There are several ways to construct an instance of SymmetricMatrix. An easy
+ * is constructing a symmetric matrix by passing an instancen of Eigen::Matrix
+ * as argument.
+ * \code
+ * Eigen::Matrix<int, 4, 4> eigenmat;           // Construct an Eigen::Matrix
+ * eigenmat << 1,2,3,4,                         // Fill it with elements
+ *             2,2,3,4,
+ *             3,3,3,4,
+ *             4,4,4,4;
+ * SymmetricMatrix<int, 4> symmat(eigenmat);    // Construct the symmetric matrix
+ * \endcode
+ * Another way to get an arbitrary symmetric matrix is to use the static function
+ * ``SymmetricMatrix<T, N>::Random()``.
+ * \code
+ * SymmetricMatrix<int, 4> symmat = SymmetricMatrix<int, 4>::Random();  // symmat is filled with random ints
+ * \endcode
+ * For a lot of concrete classes of the class template SymmetricMatrix exist typedef to make its usage
+ * easier:
+ * \code
+ * SymmetricMatrix3d symmat = SymmetricMatrix3d::Random();  // the same as SymmetricMatrix<double, 3>
+ * \endcode
+ * All matrices above where fixed sized (we defined the matrix dimension as a template parameter).
+ * The elements of such a matrix get stored on the stack. Using fixed sized matrices helps
+ * the compiler to do a lot of work during compilation. However stack size is limited and
+ * large matrices cannot be stored there. For such cases we need to use dynamically sized
+ * matrices:
+ * \code
+ * SymmetricMatrix<int, Eigen::Dynamic> symmat = SymmetricMatrix<int, Eigen::Dynamic>::Random(3); // we have to pass the dimension as an argument
+ * \endcode
+ * Again a lot of typedefs exists for matrices with dynamic size:
+ * \code
+ * SymmetricMatrixXi symmat_int;                // SymmetricMatrix<int, Eigen::Dynamic>
+ * SymmetricMatrixXd symmat_double;             // SymmetricMatrix<double, Eigen::Dynamic>
+ * SymmetricMatrixXcd symmat_complex_double;    // SymmetricMatrix<std::complex<double>, Eigen::Dynamic>
+ * \endcode
+ * With the use of overloaded operators the usage of instances of SymmetricMatrix is very intuitive:
+ * \code
+ * SymmetricMatrixXi symmat1 = SymmetricMatrixXi::Random(3);
+ * SymmetricMatrixXi symmat2 = SymmetricMatrixXi::Random(3);
+ * SymmetricMatrixXi result = symmat1 + symmat2;
+ * \endcode
  */

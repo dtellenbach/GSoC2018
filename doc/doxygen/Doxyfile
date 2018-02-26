@@ -4,11 +4,11 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "GSoC 2018 - SymmetricMatrix"
+PROJECT_NAME           = "Google Summer of Code 2018 - Faster Matrix Algebra for ATLAS"
 PROJECT_NUMBER         = 
 PROJECT_BRIEF          = 
 PROJECT_LOGO           = 
-OUTPUT_DIRECTORY       = /Users/datell/Documents/GSoC2018/doc/doxygen
+OUTPUT_DIRECTORY       = doc/doxygen
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = NO
 OUTPUT_LANGUAGE        = English
@@ -113,7 +113,7 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = ./include \
-			 ./doc/doxygen/mainpage.dox
+			             ./doc/doxygen/mainpage.dox
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
