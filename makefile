@@ -10,10 +10,10 @@ LDFLAGS := -lbenchmark
 BINDIR := bin
 INCDIR := include
 EXAMPLEDIR := examples
-BENCHDIR := benchmark
-GBENCHDIR := googlebenchmark
-TESTDIR := test
+BENCHDIR := benchmarks
+TESTDIR := tests
 DOXYDIR := doc/doxygen
+PROJDIR := doc/latex
 
 # Dependencies
 DOXYGEN := $(shell command -v doxygen 2> /dev/null)
@@ -40,20 +40,9 @@ ifeq ($(wildcard $(BINDIR)/.),)
 endif
 
 ifeq ($(CC),icpc)
-	$(foreach src, $(wildcard $(BENCHDIR)/*.$(SRCEXT)), $(CC) -I $(INCDIR) $(ICCFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
+	echo $(foreach src, $(wildcard $(BENCHDIR)/*.$(SRCEXT)), $(CC) -I $(INCDIR) $(ICCFLAGS) $(LDFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
 else
-	$(foreach src, $(wildcard $(BENCHDIR)/*.$(SRCEXT)), $(CC) -I $(INCDIR) $(CCFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
-endif
-
-googlebenchmark:
-ifeq ($(wildcard $(BINDIR)/.),)
-	$(shell mkdir $(BINDIR))
-endif
-
-ifeq ($(CC),icpc)
-	echo $(foreach src, $(wildcard $(GBENCHDIR)/*.$(SRCEXT)), $(CC) -I $(INCDIR) $(ICCFLAGS) $(LDFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
-else
-	$(foreach src, $(wildcard $(GBENCHDIR)/*.$(SRCEXT)), $(CC) -I $(INCDIR) $(CCFLAGS) $(LDFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
+	$(foreach src, $(wildcard $(BENCHDIR)/*.$(SRCEXT)), $(CC) -I $(INCDIR) $(CCFLAGS) $(LDFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
 endif
 
 test:
@@ -75,9 +64,4 @@ ifndef pdflatex
 endif
 	
 clean:
-	$(RM) -f $(BINDIR)/*; $(RM) -f SymmetricMatrix.html; $(RM) -rf $(DOXYDIR)/html
-
-
-
-
-
+	$(RM) -f $(BINDIR)/*; $(RM) -f SymmetricMatrix.html Project.pdf; $(RM) -rf $(DOXYDIR)/html

@@ -47,6 +47,8 @@ Using GNU Make you can build the contained examples, benchmarks, tests and the d
 
 E.g., running ``make example`` builds all files contained in [./examples](./examples) in ./bin. 
 
+The make directives ``make doc-code`` and ``make doc-proj`` create symbolic links in the directory root called ``SymmetricMatrix.html`` and ``Project.pdf``.
+
 ### Dependencies ###
 
 To build examples, benchmarks and tests a C++ compiler that supports C++11 is required. As default compiler ``gcc`` is chosen but you can change the [makefile](makefile) to other compilers like ``clang`` or ``icc``.
@@ -91,13 +93,13 @@ Note that using the makefile requires the Google benchmark header to be containe
 
 All benchmark results including their graphical representations can be found in the project documentation.
 
-**[add_fixed_g.cc](benchmark/add_fixed_g.cc):** Measures the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
+**[add_fixed.cc](benchmarks/add_fixed.cc):** Measures the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
 
-**[add_dynamic_g.cc](benchmark/add_dynamic.cc):** Measures the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
+**[add_dynamic.cc](benchmarks/add_dynamic.cc):** Measures the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
 
-**[mult_fixed_g.cc](benchmark/mult_fixed_g.cc):** Measures the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
+**[mult_fixed.cc](benchmarks/mult_fixed.cc):** Measures the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
 
-**[mult_dynamic_g.cc](benchmark/mult_dynamic_g.cc):** Measures the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
+**[mult_dynamic.cc](benchmarks/mult_dynamic.cc):** Measures the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
 
 ## Tests ##
 
@@ -105,10 +107,10 @@ All tests work by first constructing an instance of Eigen::Matrix, make sure tha
 
 These four tests are included:
 
-**[fixed_fixed.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of fixed dimension. Several datatypes and matrix dimensions are tested.
+**[fixed_fixed.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of fixed dimension. Several datatypes and matrix dimensions are tested.
 
-**[fixed_dynamic.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
+**[fixed_dynamic.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
 
-**[dynamic_dynamic.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of dynamic dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
+**[dynamic_dynamic.cc](tests/fixed_fixed.cc):** Tests operations on symmetric matrices of dynamic dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
 
-**[exception.cc](test/exception.cc):** Tests edge cases that should throw expection.
+**[exception.cc](tests/exception.cc):** Tests edge cases that should throw expection.
