@@ -1,9 +1,8 @@
 # Google Summer of Code 2018 - Faster Matrix Algebra for ATLAS #
 
-David A. Tellenbach <<david.tellenbach@me.com>>
 ## Overview ##
 
-This repository contains a very first draft for an efficient implementation of symmetric matrices using the C++ library Eigen. More information about the project and the design of the contained class SymmetricMatrix can be found in the Doxygen documentation.
+This repository contains a very first draft for an efficient implementation of symmetric matrices using the C++ library Eigen. More information about the project and the design of the contained class SymmetricMatrix can be found in the project documentation that can be build using ``make doc-proj``.
 
 ### Structure ###
 
@@ -16,8 +15,9 @@ The repository is structured as follows
     ├── doc     
     |   ├── doxygen
     │   │   ├── Doxyfile
-    │   │   └── mainpage.dox                   
-    │   ├── latex             
+    │   │   └── mainpage.dox   
+    │   ├── latex
+    │   │   └── project.tex
     │   └── img
     ├── include
     │   ├── SymmetricMatrix.h
@@ -48,15 +48,25 @@ Using GNU Make you can build the contained examples, benchmarks, tests and the d
     benchmark           Builds the benchmarks
     googlebenchmark     Builds benchmarks using Google's benchmark library
     test                Builds tests
-    html-doc            Builds documentation of SymmetricMatrix as HTML
-    pdf-doc             Builds documentation of SymmetricMatrix as PDF
+    doc-code            Builds the Doxygen documentation of SymmetricMatrix as HTML
+    doc-proj            Builds documentation about the project and its design as PDF
     clean               Removes built executables and documentation
 
 E.g., running ``make example`` builds all files contained in (./examples)[./examples] in ./bin. 
 
+### Dependencies ###
+
+To build examples, benchmarks and tests a C++ compiler that supports C++11 is required. As default compiler ``gcc`` is chosen but you can change the (makefile)[makefile] to other compilers like ``clang`` or ``icc``.
+
+To build the Google benchmarks you need to ensure that the corresponding library and headers are available. See (here)[https://github.com/google/benchmark] for further information about the Google benchmark library.
+
+To build the Doxygen documentation of the SymmetricMatrix class Doxygen must be installed. See (here)[https://www.stack.nl/~dimitri/doxygen/] for further information about Doxygen.
+
+To build the project documentation pdflatex is required. See (here)[https://www.tug.org/applications/pdftex/] for further information about pdflatex.
+
 ## Examples ##
 
-Several examples that demonstrate all features of the matrix class can be found in [./example](./doc/Documentation.pdf). In detail the following topics are covered:
+Several examples that demonstrate all available features of the SymmetricMatrix class can be found in [./example](./doc/Documentation.pdf). In detail the following topics are covered:
 
 **[Example 1](./examples/example1.cc)**
 - Construct an instance of ``SymmetricMatrix`` from an instance of ``Eigen::Matrix`` (fixed size)
