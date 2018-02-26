@@ -126,3 +126,4 @@ Three tests are includes:
 
 **[dynamic_dynamic.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of dynamic dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
 
+**[exception.cc](test/exception.cc):** Test edge cases that should throw expection.
