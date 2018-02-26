@@ -1,10 +1,8 @@
 # Google Summer of Code 2018 - Faster Matrix Algebra for ATLAS #
 
-## Overview ##
-
 This repository contains a very first draft for an efficient implementation of symmetric matrices using the C++ library Eigen. More information about the project and the design of the contained class SymmetricMatrix can be found in the project documentation that can be build using ``make doc-proj``.
 
-### Structure ###
+## Structure ##
 
 The repository is structured as follows
 
@@ -60,7 +58,7 @@ To build examples, benchmarks and tests a C++ compiler that supports C++11 is re
 
 To build the Google benchmarks you need to ensure that the corresponding library and headers are available. See [here](https://github.com/google/benchmark) for further information about the Google benchmark library.
 
-To build the Doxygen documentation of the SymmetricMatrix class Doxygen must be installed. See [here][https://www.stack.nl/~dimitri/doxygen/] for further information about Doxygen.
+To build the Doxygen documentation of the SymmetricMatrix class Doxygen must be installed. See [here](https://www.stack.nl/~dimitri/doxygen/) for further information about Doxygen.
 
 To build the project documentation pdflatex is required. See [here](https://www.tug.org/applications/pdftex/) for further information about pdflatex.
 
@@ -96,8 +94,35 @@ The repository contains two types of benchmarks: Benchmarks using a selfcontaine
 
 ### Native Benchmarks ###
 
-**[access.cc](access.cc):** Measures the time consumption of accessing all elements of instances of SymmetricMatrix and Eigen::Matrix for different matrix dimension.
+**[access.cc](benchmark/access.cc):** Measures the time consumption of accessing all elements of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
 
+**[add_fixed.cc](benchmark/add_fixed.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
 
+**[add_dynamic.cc](benchmark/add_dynamic.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
 
+**[mult_fixed.cc](benchmark/mult_fixed.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions.
+
+**[mult_dynamic.cc](benchmark/mult_dynamic.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions.
+
+### Google Benchmarks ###
+
+**[add_fixed_g.cc](googlebenchmark/add_fixed_g.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
+
+**[add_dynamic_g.cc](googlebenchmark/add_dynamic.cc)** Measure the time consumption of addition of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
+
+**[mult_fixed_g.cc](googlebenchmark/mult_fixed_g.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several fixed dimensions using the Google benchmark library.
+
+**[mult_dynamic_g.cc](googlebenchmark/mult_dynamic_g.cc)** Measure the time consumption of multiplication of instances of SymmetricMatrix and Eigen::Matrix for several dynamic dimensions using the Google benchmark library.
+
+## Tests ##
+
+All tests work by first constructing an instance of Eigen::Matrix, make sure that this instance is symmetric and constructing instances of SymmetricMatrix by passing the constructed Eigen::Matrix. Then any operation is performed for both the SymmetricMatrix and the Eigen::Matrix. If both operations yield the same result, the test is passed. In fact the all tests check if instances of SymmetricMatrix behave like symantically identical instances of Eigen::Matrix.
+
+Three tests are includes:
+
+**[fixed_fixed.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of fixed dimension. Several datatypes and matrix dimensions are tested.
+
+**[fixed_dynamic.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of fixed dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
+
+**[dynamic_dynamic.cc](test/fixed_fixed.cc):** Tests operations on symmetric matrices of dynamic dimension with symmetric matrices of dynamic dimension. Several datatypes and matrix dimensions are tested.
 
