@@ -181,7 +181,9 @@ class SymmetricMatrix {
     operator+(const SymmetricMatrix<Scalar>& other) {
         // Check if dynamic dimension is equal to fixed one
         if (Dimension != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for instances of SymmetricMatrix "
+                                        "with not matching dimension");
         }
 
         // Construct new matrix and set underlying std::array
@@ -220,7 +222,9 @@ class SymmetricMatrix {
     operator-(const SymmetricMatrix<Scalar>& other) {
         // Check if dynamic dimension is equal to fixed one
         if (Dimension != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for instances of SymmetricMatrix "
+                                        "with not matching dimension");
         }
 
         // Construct new matrix and set underlying std::array
@@ -261,7 +265,10 @@ class SymmetricMatrix {
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
         if (Dimension != other.cols()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for an instance of SymmetricMatrix "
+                                        "with argument of type Eigen::Matrix "
+                                        "for not matching dimensions");
         }
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
@@ -304,7 +311,10 @@ class SymmetricMatrix {
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
         if (Dimension != other.cols()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for an instance of SymmetricMatrix "
+                                        "with argument of type Eigen::Matrix "
+                                        "for not matching dimensions");
         }
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
@@ -422,7 +432,9 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     : dimension(mat.cols()) {
         // check if mat is a square matrix
         if (mat.cols() != mat.rows()) {
-             throw std::invalid_argument("Not a square matrix");
+             throw std::invalid_argument("No instance of SymmetricMatrix can "
+                                         "be constructed from non-square "
+                                         "matrix of type Eigen::Matrix");
         }
 
         // Push upper triangular part of mat into the underlying std::vector
@@ -477,6 +489,10 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      */
     static SymmetricMatrix<Scalar>
     Random(int dim) {
+        if (dim < 0) {
+            throw std::invalid_argument("Cannot construct matrix with negative "
+                                        "dimension");
+        }
         return SymmetricMatrix<Scalar>(
             static_cast<Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>>(
                 Eigen::Matrix<Scalar,
@@ -570,7 +586,9 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     operator+(const SymmetricMatrix<Scalar>& other) {
         // Check if both dynamic dimensions match
         if (dimension != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for instances of SymmetricMatrix "
+                                        "with not matching dimension");
         }
 
         // Construct new matrix and set underlying std::vector
@@ -592,7 +610,9 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     operator-(const SymmetricMatrix<Scalar>& other) {
         // Check if both dynamic dimensions match
         if (dimension != other.dim()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for instances of SymmetricMatrix "
+                                        "with not matching dimension");
         }
 
         // Construct new matrix and set underlying std::vector
@@ -616,7 +636,10 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
         if (dimension != other.cols()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for an instance of SymmetricMatrix "
+                                        "with argument of type Eigen::Matrix "
+                                        "for not matching dimensions");
         }
 
         Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension, 
@@ -643,7 +666,10 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
         if (dimension != other.cols()) {
-            throw std::invalid_argument("Not matching dimension");
+            throw std::invalid_argument("Operation + cannot be performed "
+                                        "for an instance of SymmetricMatrix "
+                                        "with argument of type Eigen::Matrix "
+                                        "for not matching dimensions");
         }
         Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension,
                                                                 dimension);
