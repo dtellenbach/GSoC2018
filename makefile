@@ -51,7 +51,7 @@ ifeq ($(wildcard $(BINDIR)/.),)
 endif
 	$(foreach src, $(wildcard $(TESTDIR)/*.$(SRCEXT)), $(CC) -I $(INCDIR) $(DEBUGFLAGS) $(src) -o $(BINDIR)/$(shell basename $(basename $(src)));)
 
-html-doc:
+doc-code:
 ifndef DOXYGEN
 	$(error "Could not find doxygen")
 endif
