@@ -23,21 +23,24 @@ The repository is structured as follows
     │   ├── add_fixed.cc
     │   ├── add_dynamic.cc
     │   ├── mult_fixed.cc
-    │   └── mult_fixed.cc
+    │   └── mult_dynamic.cc
     ├── examples
     │   ├── example1.cc
     │   ├── example2.cc
     │   ├── example3.cc
-    │   └── example4.cc
+    │   ├── example4.cc
+    │   └── example5.cc
     └── bin
 
 ## How to build ##
 
 The SymmetricMatrix class is header only, therefore you can just include the file ``./include/SymmatricMatrix.h`` and give it a try.
 Since this is an experimental project, Eigen is included in the ``./include`` directory. There is no need to have it in one of your include directories. Actually you can build everything except the Google benchmarks with nothing installed but a compiler that supports C++11.
+If you want to build any of the code example contained in the repository by hand, make sure you add ``./include`` to your include path using, e.g., ``g++ -std=c++11 -I include source.cc``.
 
 Using GNU Make you can build the contained examples, benchmarks, tests and the documentation. The following make directives are available:
 
+    all                 Builds everything except documentation
     example             Builds the examples
     benchmark           Builds the benchmarks using Google's benchmark library
     test                Builds tests

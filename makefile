@@ -21,7 +21,7 @@ PDFLATEX := $(shell command -v pdflatex 2> /dev/null)
 
 .PHONY: all example test benchmark doc-proj doc-code clean
 
-all: example benchmark googlebenchmark test
+all: example benchmark test
 
 example:
 ifeq ($(wildcard $(BINDIR)/.),)
