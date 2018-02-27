@@ -24,8 +24,8 @@ int main() {
 
     // Fill the matrix with elements
     eigenmat << 1,2,3,
-           1,2,3,
-           1,2,3;
+                1,2,3,
+                1,2,3;
 
     // Print the Eigen::Matrix
     std::cout << "Eigen::Matrix: \n";
