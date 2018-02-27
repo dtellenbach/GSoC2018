@@ -11,7 +11,6 @@
 #include <SymmetricMatrix.h>
 #include <eigen3/Eigen/Eigen>
 #include <iostream>
-#include <cstdlib>  /* getenv() */
 
 #define FORCE_FIXED_COMPILER_ERROR 0
 
@@ -24,7 +23,7 @@ int main() {
     dsymmat1 + dsymmat2;      // will compile but will throw expection
 
     // If something similar is tried for matrices of fixed size, the compiler
-    // will report an error. To try this change the defined value 
+    // will report an error. To try this change the defined value
     // FORCE_FIXED_COMPILER_ERROR to 1
 
 #if (FORCE_FIXED_COMPILER_ERROR)
@@ -32,5 +31,4 @@ int main() {
         SymmetricMatrix3i ssymmat2 = SymmetricMatrix2i::Random();
         ssymmat1 + ssymat2;
 #endif
-
 }

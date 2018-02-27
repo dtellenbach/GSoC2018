@@ -5,24 +5,24 @@
  *  David A. Tellenbach <tellenbach@cip.ifi.lmu.de>                            *
  *                                                                             *
  *  Example 3 - Addition and Subtraction                                       *
- *  Topics covered: > Addition and subtraction for two instances of symmetric  * 
+ *  Topics covered: > Addition and subtraction for two instances of symmetric  *
  *                    matrix                                                   *
  *                  > Addition and subtraction for symmetric matrices and      *
  *                    arbitrary matrices                                       *
  ******************************************************************************/
 
-#include <iostream>
 #include <SymmetricMatrix.h>
 #include <eigen3/Eigen/Eigen>
+#include <iostream>
 
 
 int main() {
     // Matrices with fixed size
     // Create an instance of Eigen::Matrix
     Eigen::Matrix<int, 3, 3> eigenmat;
-    eigenmat << 1,2,3,
-                2,3,3,
-                3,3,4;
+    eigenmat << 1, 2, 3,
+                2, 3, 3,
+                3, 3, 4;
 
     // Create symmetric matrices from eigenmat
     SymmetricMatrix3i symmat(eigenmat);
@@ -37,7 +37,7 @@ int main() {
     std::cout << "SymmetricMatrix = SymmetricMatrix - SymmetricMatrix\n";
     std::cout << symadd << "\n-\n" << symmat << "\n=\n" << symsub << "\n\n";
 
-    // This also works with dynamically sized matrices. You can even mix 
+    // This also works with dynamically sized matrices. You can even mix
     // dynamic and fixed size under some circumstances
 
     // Addition and subtraction also works with arbitrary matrices. The result

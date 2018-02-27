@@ -34,7 +34,7 @@ template<typename Scalar, int Dimension = Eigen::Dynamic>
 class SymmetricMatrix {
  public:
     /* Constructors */
-    SymmetricMatrix(){}
+    SymmetricMatrix() = default;
 
     /**
      * \brief Construct SymmetricMatrix from Eigen::Matrix
@@ -110,7 +110,7 @@ class SymmetricMatrix {
     Random() {
         return SymmetricMatrix<Scalar, Dimension>(
             static_cast<Eigen::Matrix<Scalar, Dimension, Dimension>>(
-                Eigen::Matrix<Scalar, Dimension, Dimension>::Random(Dimension, 
+                Eigen::Matrix<Scalar, Dimension, Dimension>::Random(Dimension,
                                                                     Dimension)));
     }
 
@@ -370,20 +370,26 @@ class SymmetricMatrix {
      * \return Product of both matrices
      */
     Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>
-    operator*(const Eigen::Matrix<Scalar,
-                                  Eigen::Dynamic, Eigen::Dynamic>& other) {
-        return Eigen::Matrix<Scalar, Eigen::Dynamic,
-                             Eigen::Dynamic>(constructEigenMatrix() * other);
+    operator*(const Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>&
+        other) {
+        return Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>(
+            constructEigenMatrix() * other);
     }
 
  private:
-
-    SymmetricMatrix(const std::array<Scalar,
-        (Dimension*Dimension+Dimension)/2>& arr) : elements(arr){}
     /**
-     * Calculate size of the underlying std::array at compile-time
+     * \brief Construct SymmetricMatrix from std::array. 
+     * \param arr std::array that contains the matrix elements
+     */
+    SymmetricMatrix(const std::array<Scalar,
+        (Dimension*Dimension+Dimension)/2>& arr) : elements(arr) {}
+
+    /**
+     * \brief Calculate size of the underlying std::array at compile-time
+     * \return Size of underlying std::array
      */
     static constexpr int calcArraySize();
+
     std::array<Scalar, calcArraySize()> elements;
 };
 
@@ -394,8 +400,7 @@ constexpr int SymmetricMatrix<Scalar, Dimension>::calcArraySize() {
 
 /**
  * \class SymmetricMatrix<Scalar, Eigen::Dynamic>
- * 
- * Partial template specialisation where Dimension = Eigen::Dynamic.
+ * \brief Partial template specialisation where Dimension = Eigen::Dynamic.
  * 
  * This class represents symmetric matrices with dynamic dimension, i.e, the
  * matrix dimension can be chosen and changes at runtime. This class is in
@@ -405,7 +410,6 @@ constexpr int SymmetricMatrix<Scalar, Dimension>::calcArraySize() {
 template<typename Scalar>
 class SymmetricMatrix<Scalar, Eigen::Dynamic> {
  public:
-    
     /**
      * \brief Default constructor that constructs a 0-dimensional symmetric matrix
      */
@@ -415,7 +419,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      * \brief Constructor that reserves size for the underlying container
      * \param dimension Dimension of the matrix
      */
-    SymmetricMatrix(size_t dimension) : dimension(dimension) {
+    explicit SymmetricMatrix(size_t dimension) : dimension(dimension) {
         elements.reserve((dimension*dimension+dimension)/2);
     }
 
@@ -427,9 +431,8 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      * 
      * \param mat Instance of Eigen::Matrix
      */
-    SymmetricMatrix(const Eigen::Matrix<Scalar,
-                                        Eigen::Dynamic, Eigen::Dynamic>& mat)
-    : dimension(mat.cols()) {
+    SymmetricMatrix(const Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>&
+        mat) : dimension(mat.cols()) {
         // check if mat is a square matrix
         if (mat.cols() != mat.rows()) {
              throw std::invalid_argument("No instance of SymmetricMatrix can "
@@ -642,7 +645,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
                                         "for not matching dimensions");
         }
 
-        Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension, 
+        Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension,
                                                                   dimension);
 
         for (int i = 0; i < dimension; ++i) {
@@ -696,7 +699,6 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
                              Eigen::Dynamic>(constructEigenMatrix()
                                              * other.constructEigenMatrix());
     }
-
 
     /**
      * \brief Overloaded operator * to multiply an Eigen::Matrix with dynamic dimension

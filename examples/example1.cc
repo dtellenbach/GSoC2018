@@ -18,14 +18,15 @@
 #include <eigen3/Eigen/Eigen>
 #include <iostream>
 
+
 int main() {
     // Define a 3x3 Eigen::Matrix
     Eigen::Matrix<int, 3, 3> eigenmat;
 
     // Fill the matrix with elements
-    eigenmat << 1,2,3,
-                1,2,3,
-                1,2,3;
+    eigenmat << 1, 2, 3,
+                1, 2, 3,
+                1, 2, 3;
 
     // Print the Eigen::Matrix
     std::cout << "Eigen::Matrix: \n";
@@ -48,13 +49,12 @@ int main() {
         std::cout << "My Eigen::Matrix is not symmetric\n";
     }
 
-    // You can access elements of a symmetric matrix directly using the 
-    // overloaded operator (). In facts this returns a reference to the value 
+    // You can access elements of a symmetric matrix directly using the
+    // overloaded operator (). In facts this returns a reference to the value
     // and is therefore an assignable expression
-    std::cout << "symmat(1,2) = " << symmat(1,2) << "\n"
-              << "symmat(2,1) = " << symmat(2,1) << "\n";
-    symmat(1,2) = 42;
-    std::cout << "symmat(1,2) = " << symmat(1,2) << "\n"
-              << "symmat(2,1) = " << symmat(2,1) << "\n";
-
+    std::cout << "symmat(1, 2) = " << symmat(1, 2) << "\n"
+              << "symmat(2, 1) = " << symmat(2, 1) << "\n";
+    symmat(1, 2) = 42;
+    std::cout << "symmat(1, 2) = " << symmat(1, 2) << "\n"
+              << "symmat(2, 1) = " << symmat(2, 1) << "\n";
 }

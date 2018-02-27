@@ -23,8 +23,7 @@ void BM_AddEigenEigen(benchmark::State& state) {
 
     for (auto _ : state) {
         benchmark::DoNotOptimize(result = mat1 + mat2);
-    }
-    
+    }  
 }
 
 template<typename Scalar>

@@ -16,9 +16,9 @@
 int main() {
     // Create an instance of Eigen::Matrix and fill it with values
     Eigen::MatrixXd eigenmat(3, 3);
-    eigenmat << 1.0,2.0,3.0,
-                2.0,3.0,4.0,
-                3.0,4.0,5.0;
+    eigenmat << 1.0, 2.0, 3.0,
+                2.0, 3.0, 4.0,
+                3.0, 4.0, 5.0;
 
     // Create symmetric matrices by passing eigenmat
     SymmetricMatrixXd dsymmat(eigenmat);    // Dynamic size
