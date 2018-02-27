@@ -14,7 +14,7 @@ The repository is structured as follows
     │   │   ├── Doxyfile
     │   │   └── mainpage.dox   
     │   ├── latex
-    │   │   └── project.tex
+    │   │   └── Project.tex
     │   └── img
     ├── include
     │   ├── SymmetricMatrix.h
