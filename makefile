@@ -3,7 +3,7 @@ CC = g++
 SRCEXT := cc
 CCFLAGS := -std=c++11 -O3
 ICCFLAGS := -std=c++11 -fast	# Intel C++ compiler icpc supports additional optimization
-DEBUGFLAGS := -Wall -Werror -Wpedantic -std=c++11 -Wnoerror-sign-compare
+DEBUGFLAGS := -Wall -Werror -Wpedantic -std=c++11 -Wno-sign-compare
 LDFLAGS := -lbenchmark
 
 # Directories
