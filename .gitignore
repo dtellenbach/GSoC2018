@@ -43,3 +43,9 @@ SymmetricMatrix.html
 
 # Bin
 bin
+
+# Latex
+doc/latex
+!doc/latex/*.tex
+!doc/latex/makefile
+!doc/latex/img
