@@ -63,3 +63,5 @@ bin
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+doc/latex/Project.pdf
+Project.pdf
