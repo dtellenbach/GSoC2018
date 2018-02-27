@@ -1,7 +1,7 @@
 \documentclass[a4wide]{scrartcl}
 
 \usepackage{a4wide}
-\usepackage[top=30pt,bottom=70pt,left=45pt,right=45pt]{geometry}
+\usepackage[top=70pt,bottom=70pt,left=45pt,right=45pt]{geometry}
 %\usepackage[margin=60pt]{geometry}
 %Sonstiges
 \usepackage{nameref}
@@ -14,9 +14,9 @@
 %Header
 \usepackage[automark,headsepline]{scrpage2}
 \pagestyle{scrheadings}
-\ihead{}
+\ihead{GSoC 2018 - Faster Matrix Algebra for ATLAS}
 \chead{}
-\ohead{}
+\ohead{\currentname}
 \ifoot{}
 \cfoot{\thepage}
 \ofoot{}
@@ -170,7 +170,7 @@ Another task of the evaluation test was to throw exceptions whenever an operatio
 \begin{description}
 \item[Fixed size operates with fixed size] The easiest case. The compiler performs statically typechecks and the implementation guarantees that a compile time error will raise if the operands have non-matching dimensions. This holds for operations with fixed sized instances of SymmetricMatrix and fixed sized instances of Eigen::Matrix. See \autoref{lst3} for an example that will not compile.
 \item[Fixed size operates with dynamic size] In these cases the implementation checks if the dimensions match during runtime. If they dont, an excpetion is thrown.
-\item[Dynamic size operates with dynamic size] In these cases the implementation checks if the dimensions match during runtime. If they dont, an excpetion is thrown. See \autoref{lst4} for an try-catch example.
+\item[Dynamic size operates with dynamic size] In these cases the implementation checks if the dimensions match during runtime. If they dont, an excpetion is thrown. See \autoref{lst4} for a try-catch example.
 \end{description}
 \begin{table}
 \begin{lstlisting}[caption={Addition of matrices with different fixed size. This example will not compile.},label=lst3]
@@ -200,6 +200,57 @@ try {
 \end{lstlisting}
 \end{table}
 \section{Benchmarks}
+To measure the performance of the implementation of SymmetricMatrix the repository contains several benchmarks using the Google benchmark library. The following sections provide examples of these benchmarks run on my machine with the following hardware specifications:
+\begin{description}
+\item[Number of cores:]$8$
+\item[Clock frequency per core:]$2.3~$GHz
+\item[L1 Data chache size:]$32$~K ($4$x)
+\item[L1 Instruction cache size:]$32$~K ($4$x)
+\item[L2 Cache size:]$262$~K ($4$x)
+\item[L3 Cache size:]$6291$~K ($1$x)
+\end{description}
+
+\subsection{add$\_$fixed.cc}
+This benchmarks performs the addition of matrices of fixed size for dimensions from $10$ to $100$. \autoref{tbl2} shows the benchmark results.
+\begin{table}
+    \centering
+\begin{tabular}{r|r|r|r}
+    Dimension & t1 (Eigen + Eigen)  & t2 (Symmetric + Symmetric) & t3 (Symmetric + Eigen)  \\ \hline \hline
+    $10$  & $8$~ns & $27$~ns & $107$~ns\\
+    $20$  & $141$~ns & $52$~ns & $599$~ns\\
+    $30$  & $101$~ns & $116$~ns & $978$~ns\\
+    $40$  & $180$~ns & $194$~ns & $1826$~ns\\
+    $50$  & $279$~ns & $253$~ns & $2566$~ns\\
+    $60$  & $780$~ns & $523$~ns & $3704$~ns\\
+    $70$  & $958$~ns & $749$~ns & $5049$~ns \\
+    $80$  & $1211$~ns & $1144$~ns & $8532$~ns \\
+    $90$  & $1488$~ns & $2024$~ns & $8460$~ns\\
+    $100$ & $2024$~ns & $2594$~ns & $12782$~ns
+    \end{tabular}
+    \caption{Results of a run of benchmark add$\_$fixed.cc.}
+    \label{tbl2}
+\end{table}
+While the addition of instances of Eigen::Matrix with instances of Eigen::Matrix is somehow comparable to the addition of instances of SymmetricMatrix with instances of SymmetricMatrix the addition of instances of SymmetricMatrix with instances of Eigen::Matrix is achives a way lower performance. This is most likely an implementation issue and should definitly be improved.
+\subsection{add$\_$dynamic.cc}
+This benchmarks performs addition of dynamically sized matrices for dimensions from $1000$ to $10000$. \autoref{tbl3} provides benchmark results. While the addition of symmetric matrices with symmetric matrices can now even perform better that additions of arbitrary matrices with arbitrary matrices the additon of both perform bad again. However the results of the additon of two symmetric matrices is not satisfying even thought is performs as good as the additon of arbitrary matrices. Since way less elements are included a satisfying implementation would perform much better. 
+\begin{table}
+    \centering
+\begin{tabular}{r|r|r|r}
+    Dimension & t1 (Eigen + Eigen)  & t2 (Symmetric + Symmetric) & t3 (Symmetric + Eigen)  \\ \hline \hline
+    $1000$  & $466$~us & $282$~us & $5910$~us\\
+    $2000$  & $2343$~us & $3226$~us & $34419$~us\\
+    $3000$  & $5687$~us & $8083$~us & $106047$~us\\
+    $4000$  & $15054$~us & $14938$~us & $188352$~us\\
+    $5000$  & $26146$~us & $26723$~us & $357040$~us\\
+    $6000$  & $40217$~us & $37246$~us & $593490$~us\\
+    $7000$  & $55773$~us & $59755$~us & $822445$~us \\
+    $8000$  & $91013$~us & $77761$~us & $1097679$~us \\
+    $9000$  & $110985$~us & $146855$~us & $1327157$~us\\
+    $10000$ & $179361$~us & $191441$~us & $1925028$~us
+    \end{tabular}
+    \caption{Results of a run of benchmark add$\_$fixed.cc.}
+    \label{tbl3}
+\end{table}
 \section{Futur Work}
 This section explains 
 \subsection{Existing matrix classes in Eigen}

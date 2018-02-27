@@ -13,13 +13,13 @@ EXAMPLEDIR := examples
 BENCHDIR := benchmarks
 TESTDIR := tests
 DOXYDIR := doc/doxygen
-PROJDIR := doc/latex
+TEXDIR := doc/latex
 
 # Dependencies
 DOXYGEN := $(shell command -v doxygen 2> /dev/null)
 PDFLATEX := $(shell command -v pdflatex 2> /dev/null)
 
-.PHONY: all example test benchmark googlebenchmark doxygen clean
+.PHONY: all example test benchmark doc-proj doc-code clean
 
 all: example benchmark googlebenchmark test
 
@@ -58,10 +58,15 @@ endif
 	doxygen $(DOXYDIR)/Doxyfile
 	ln -sf $(DOXYDIR)/html/index.html SymmetricMatrix.html
 
-pdf-doc:
-ifndef pdflatex
+doc-proj:
+ifndef PDFLATEX
 	$(error "Could not find pdflatex")
 endif
+	$(MAKE) -C $(TEXDIR)	
+	ln -sf $(TEXDIR)/Project.pdf Project.pdf
 	
 clean:
-	$(RM) -f $(BINDIR)/*; $(RM) -f SymmetricMatrix.html Project.pdf; $(RM) -rf $(DOXYDIR)/html
+	$(RM) -f $(BINDIR)/*
+	$(RM) -f SymmetricMatrix.html Project.pdf
+	$(RM) -rf $(DOXYDIR)/html
+	$(RM) -f $(TEXDIR)/*.aux $(TEXDIR)/*.fls $(TEXDIR)/*.log $(TEXDIR)/*.out $(TEXDIR)/*.synctex.gz $(TEXDIR)/*.fdb_latexmk $(TEXDIR)/Project.pdf
