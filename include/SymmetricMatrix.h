@@ -11,6 +11,10 @@
 #include <array>
 #include "eigen3/Eigen/Eigen"
 
+#if __cplusplus > 199711L
+#define CPP11_SUPPORT 1
+#endif 
+
 /**
  * \class SymmetricMatrix<typename Scalar, int Dimension = Eigen::Dimension>
  * \brief Generic class template for symmetric matrices
@@ -34,7 +38,11 @@ template<typename Scalar, int Dimension = Eigen::Dynamic>
 class SymmetricMatrix {
  public:
     /* Constructors */
+#if CPP11_SUPPORT
     SymmetricMatrix() = default;
+#else
+    SymmetricMatrix() {};
+#endif
 
     /**
      * \brief Construct SymmetricMatrix from Eigen::Matrix
@@ -109,7 +117,7 @@ class SymmetricMatrix {
     static SymmetricMatrix<Scalar, Dimension>
     Random() {
         return SymmetricMatrix<Scalar, Dimension>(
-            static_cast<Eigen::Matrix<Scalar, Dimension, Dimension>>(
+            static_cast<Eigen::Matrix<Scalar, Dimension, Dimension> >(
                 Eigen::Matrix<Scalar, Dimension, Dimension>::Random(Dimension,
                                                                     Dimension)));
     }
@@ -157,7 +165,8 @@ class SymmetricMatrix {
     }
 
     /**
-     * \brief Overloaded operator + to add a SymmetricMatrix with fixed dimension.
+     * \brief Overloaded operator + to add a SymmetricMatrix with fixed
+     * dimension.
      * \param other Matrix to add
      * \return Sum of both matrices
      */
@@ -166,14 +175,15 @@ class SymmetricMatrix {
         // Construct new matrix and set underlying std::array
         SymmetricMatrix<Scalar, Dimension> ret(elements);
         // Just add up both underlying std::vector
-        for (int i = 0; i < calcArraySize(); ++i) {
+        for (int i = 0; i < (Dimension*Dimension+Dimension)/2; ++i) {
            ret.elements[i] += other.elements[i];
         }
         return ret;
     }
 
     /**
-     * \brief Overloaded operator + to add a SymmetricMatrix with dynamic dimension.
+     * \brief Overloaded operator + to add a SymmetricMatrix with dynamic
+     * dimension.
      * \param other Matrix to add
      * \return Sum of both matrices
      */
@@ -188,14 +198,15 @@ class SymmetricMatrix {
         SymmetricMatrix<Scalar, Dimension> ret(elements);
 
         // Just add up the underlying std::array and std::vector
-        for (int i = 0; i < calcArraySize(); ++i) {
+        for (int i = 0; i < (Dimension*Dimension+Dimension)/2; ++i) {
            ret.elements[i] += other.elements[i];
         }
         return ret;
     }
 
     /**
-     * \brief Overloaded operator - to subtract a SymmetricMatrix with fixed dimension.
+     * \brief Overloaded operator - to subtract a SymmetricMatrix with fixed
+     * dimension.
      * \param other Matrix to subtract
      * \return Difference of both matrices
      */
@@ -205,14 +216,15 @@ class SymmetricMatrix {
         SymmetricMatrix<Scalar, Dimension> ret(elements);
 
         // Just add up both underlying std::array and std::vector
-        for (int i = 0; i < calcArraySize(); ++i) {
+        for (int i = 0; i < (Dimension*Dimension+Dimension)/2; ++i) {
            ret.elements[i] -= other.elements[i];
         }
         return ret;
     }
 
     /**
-     * \brief Overloaded operator - to subtract a SymmetricMatrix with dynamic dimension.
+     * \brief Overloaded operator - to subtract a SymmetricMatrix with dynamic
+     * dimension.
      * \param other Matrix to subtract
      * \return Difference of both matrices
      */
@@ -226,7 +238,7 @@ class SymmetricMatrix {
         // Construct new matrix and set underlying std::array
         SymmetricMatrix<Scalar, Dimension> ret(elements);
         // Just add up both underlying std::vector
-        for (int i = 0; i < calcArraySize(); ++i) {
+        for (int i = 0; i < (Dimension*Dimension+Dimension)/2; ++i) {
            ret.elements[i] -= other.elements[i];
         }
         return ret;
@@ -252,7 +264,8 @@ class SymmetricMatrix {
     }
 
     /**
-     * \brief Overloaded operator + to add an Eigen::Matrix with dynamic dimension.
+     * \brief Overloaded operator + to add an Eigen::Matrix with dynamic
+     * dimension.
      * \param other Matrix to add
      * \return Sum of both matrices
      */
@@ -278,7 +291,8 @@ class SymmetricMatrix {
     }
 
     /**
-     * \brief Overloaded operator - to subtract an Eigen::Matrix with fixed dimension.
+     * \brief Overloaded operator - to subtract an Eigen::Matrix with fixed
+     * dimension.
      * \param other Matrix to subtract
      * \return Difference of both matrices
      */
@@ -297,7 +311,8 @@ class SymmetricMatrix {
     }
 
     /**
-     * \brief Overloaded operator - to subtract an Eigen::Matrix with dynamic dimension.
+     * \brief Overloaded operator - to subtract an Eigen::Matrix with dynamic
+     * dimension.
      * \param other Matrix to subtract
      * \return Difference of both matrices
      */
@@ -323,7 +338,8 @@ class SymmetricMatrix {
     }
 
     /**
-     * \brief Overloaded operator * to multiply an SymmetricMatrix with fixed dimension
+     * \brief Overloaded operator * to multiply an SymmetricMatrix with fixed
+     * dimension
      * \param other Matrix to multiply
      * \return Product of both matrices
      */
@@ -335,7 +351,8 @@ class SymmetricMatrix {
     }
 
     /**
-     * \brief Overloaded operator * to multiply an SymmetricMatrix with dynamic dimension
+     * \brief Overloaded operator * to multiply an SymmetricMatrix with dynamic 
+     * dimension
      * \param other Matrix to multiply
      * \return Product of both matrices
      */
@@ -375,22 +392,34 @@ class SymmetricMatrix {
      * \brief Construct SymmetricMatrix from std::array. 
      * \param arr std::array that contains the matrix elements
      */
+#if CPP11_SUPPORT
     SymmetricMatrix(const std::array<Scalar,
         (Dimension*Dimension+Dimension)/2>& arr) : elements(arr) {}
+#else
+    SymmetricMatrix(const Scalar arr[]) {
+        for (int i = 0; i < (Dimension * Dimension + Dimension) / 2; ++i)
+            elements[i] = arr[i];
+    }
+#endif
 
+#if CPP11_SUPPORT
     /**
      * \brief Calculate size of the underlying std::array at compile-time
      * \return Size of underlying std::array
      */
     static constexpr int calcArraySize();
-
     std::array<Scalar, calcArraySize()> elements;
+#else
+    Scalar elements[(Dimension*Dimension+Dimension)/2];
+#endif
 };
 
+#if CPP11_SUPPORT
 template<typename Scalar, int Dimension>
 constexpr int SymmetricMatrix<Scalar, Dimension>::calcArraySize() {
     return (Dimension * Dimension + Dimension) / 2;
 }
+#endif
 
 /**
  * \class SymmetricMatrix<Scalar, Eigen::Dynamic>
@@ -489,7 +518,7 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
             && "dimension");
        
         return SymmetricMatrix<Scalar>(
-            static_cast<Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>>(
+            static_cast<Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> >(
                 Eigen::Matrix<Scalar,
                               Eigen::Dynamic,
                               Eigen::Dynamic>::Random(dim, dim)));
