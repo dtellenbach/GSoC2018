@@ -166,7 +166,7 @@ class SymmetricMatrix {
         // Construct new matrix and set underlying std::array
         SymmetricMatrix<Scalar, Dimension> ret(elements);
         // Just add up both underlying std::vector
-        for (int i = 0; i < elements.size(); ++i) {
+        for (int i = 0; i < calcArraySize(); ++i) {
            ret.elements[i] += other.elements[i];
         }
         return ret;
@@ -180,11 +180,9 @@ class SymmetricMatrix {
     SymmetricMatrix<Scalar, Dimension>
     operator+(const SymmetricMatrix<Scalar>& other) {
         // Check if dynamic dimension is equal to fixed one
-        if (Dimension != other.dim()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for instances of SymmetricMatrix "
-                                        "with not matching dimension");
-        }
+        eigen_assert(Dimension == other.dim() 
+            && "Operation + cannot be performed for instances of "
+            && "SymmetricMatrix with not matching dimension");
 
         // Construct new matrix and set underlying std::array
         SymmetricMatrix<Scalar, Dimension> ret(elements);
@@ -206,7 +204,7 @@ class SymmetricMatrix {
         // Construct new matrix and set underlying std::array
         SymmetricMatrix<Scalar, Dimension> ret(elements);
 
-        // Just add up both underlying std::vector
+        // Just add up both underlying std::array and std::vector
         for (int i = 0; i < calcArraySize(); ++i) {
            ret.elements[i] -= other.elements[i];
         }
@@ -221,16 +219,14 @@ class SymmetricMatrix {
     SymmetricMatrix<Scalar, Dimension>
     operator-(const SymmetricMatrix<Scalar>& other) {
         // Check if dynamic dimension is equal to fixed one
-        if (Dimension != other.dim()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for instances of SymmetricMatrix "
-                                        "with not matching dimension");
-        }
+        eigen_assert(Dimension == other.dim() 
+            && "Operation + cannot be performed for instances of "
+            && "SymmetricMatrix with not matching dimension");
 
         // Construct new matrix and set underlying std::array
         SymmetricMatrix<Scalar, Dimension> ret(elements);
         // Just add up both underlying std::vector
-        for (int i = 0; i < elements.size(); ++i) {
+        for (int i = 0; i < calcArraySize(); ++i) {
            ret.elements[i] -= other.elements[i];
         }
         return ret;
@@ -264,12 +260,11 @@ class SymmetricMatrix {
     operator+(const Eigen::Matrix<Scalar,
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
-        if (Dimension != other.cols()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for an instance of SymmetricMatrix "
-                                        "with argument of type Eigen::Matrix "
-                                        "for not matching dimensions");
-        }
+        eigen_assert(Dimension == other.dim() 
+            && "Operation + cannot be performed for instances of "
+            && "SymmetricMatrix with with argument of type Eigen::Matrix "
+            && "for not matching dimensions");
+
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
         for (int i = 0; i < Dimension; ++i) {
@@ -310,12 +305,11 @@ class SymmetricMatrix {
     operator-(const Eigen::Matrix<Scalar,
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
-        if (Dimension != other.cols()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for an instance of SymmetricMatrix "
-                                        "with argument of type Eigen::Matrix "
-                                        "for not matching dimensions");
-        }
+        eigen_assert(Dimension == other.cols()
+            && "Operation + cannot be performed for an instance of "
+            && "SymmetricMatrix with argument of type Eigen::Matrix "
+            && "for not matching dimensions");
+
         Eigen::Matrix<Scalar, Dimension, Dimension> ret;
 
         for (int i = 0; i < Dimension; ++i) {
@@ -434,11 +428,9 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     SymmetricMatrix(const Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>&
         mat) : dimension(mat.cols()) {
         // check if mat is a square matrix
-        if (mat.cols() != mat.rows()) {
-             throw std::invalid_argument("No instance of SymmetricMatrix can "
-                                         "be constructed from non-square "
-                                         "matrix of type Eigen::Matrix");
-        }
+        eigen_assert(mat.cols() == mat.rows() 
+            && "No instance of SymmetricMatrix can be constructed "
+            && "from non-square matrix of type Eigen::Matrix");
 
         // Push upper triangular part of mat into the underlying std::vector
         for (int row = 0; row < dimension; row++) {
@@ -492,10 +484,10 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
      */
     static SymmetricMatrix<Scalar>
     Random(int dim) {
-        if (dim < 0) {
-            throw std::invalid_argument("Cannot construct matrix with negative "
-                                        "dimension");
-        }
+        eigen_assert(dim >=0 
+            && "Cannot construct matrix with negative "
+            && "dimension");
+       
         return SymmetricMatrix<Scalar>(
             static_cast<Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>>(
                 Eigen::Matrix<Scalar,
@@ -588,11 +580,10 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     SymmetricMatrix<Scalar>
     operator+(const SymmetricMatrix<Scalar>& other) {
         // Check if both dynamic dimensions match
-        if (dimension != other.dim()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for instances of SymmetricMatrix "
-                                        "with not matching dimension");
-        }
+        eigen_assert(dimension == other.dim() 
+            && "Operation + cannot be performed for instances of "
+            && "SymmetricMatrix with not matching dimension");
+        
 
         // Construct new matrix and set underlying std::vector
         SymmetricMatrix<Scalar> ret(elements);
@@ -612,11 +603,9 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     SymmetricMatrix<Scalar>
     operator-(const SymmetricMatrix<Scalar>& other) {
         // Check if both dynamic dimensions match
-        if (dimension != other.dim()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for instances of SymmetricMatrix "
-                                        "with not matching dimension");
-        }
+        eigen_assert(dimension == other.dim() 
+            && "Operation + cannot be performed for instances of "
+            && "SymmetricMatrix with not matching dimension");
 
         // Construct new matrix and set underlying std::vector
         SymmetricMatrix<Scalar> ret(elements);
@@ -638,12 +627,10 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     operator+(const Eigen::Matrix<Scalar,
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
-        if (dimension != other.cols()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for an instance of SymmetricMatrix "
-                                        "with argument of type Eigen::Matrix "
-                                        "for not matching dimensions");
-        }
+        eigen_assert(dimension == other.cols()
+            && "Operation + cannot be performed for an instance of "
+            && "SymmetricMatrix with argument of type Eigen::Matrix "
+            && "for not matching dimensions");
 
         Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension,
                                                                   dimension);
@@ -668,12 +655,10 @@ class SymmetricMatrix<Scalar, Eigen::Dynamic> {
     operator-(const Eigen::Matrix<Scalar,
                                   Eigen::Dynamic, Eigen::Dynamic>& other) {
         // Check if dynamic dimension is equal to fixed one
-        if (dimension != other.cols()) {
-            throw std::invalid_argument("Operation + cannot be performed "
-                                        "for an instance of SymmetricMatrix "
-                                        "with argument of type Eigen::Matrix "
-                                        "for not matching dimensions");
-        }
+        eigen_assert(dimension == other.cols()
+            && "Operation + cannot be performed for an instance of "
+            && "SymmetricMatrix with argument of type Eigen::Matrix "
+            && "for not matching dimensions");
         Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> ret(dimension,
                                                                 dimension);
 
