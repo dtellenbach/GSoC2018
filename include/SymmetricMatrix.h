@@ -53,8 +53,8 @@ class SymmetricMatrix {
      * 
      * \param mat Instance of Eigen::Matrix with fixed dimension
      */
-    explicit SymmetricMatrix(const Eigen::Matrix<Scalar,
-                                                 Dimension, Dimension>& mat) {
+    explicit SymmetricMatrix(const Eigen::Matrix<Scalar, Dimension,
+                             Dimension>& mat) {
         int i = 0;
         for (int row = 0; row < Dimension; ++row) {
             for (int col = row; col < Dimension; ++col) {
@@ -71,8 +71,19 @@ class SymmetricMatrix {
      * 
      * \param mat Instance of Eigen::Matrix with dynamic dimension
      */
-    SymmetricMatrix(const Eigen::Matrix<Scalar, Eigen::Dynamic,
-                                        Eigen::Dynamic>& mat) {
+    explicit SymmetricMatrix(const Eigen::Matrix<Scalar, Eigen::Dynamic,
+                             Eigen::Dynamic>& mat) {
+        // Check if mat is a square matrix
+        eigen_assert(mat.cols() == mat.rows()
+            && "Cannot construct an instance of SymmetricMatrix for a matrix "
+            && "of type Eigen::Matrix<Scalar, -1, -1> that is not square.");
+
+        // Check if the fixed dimension of SymmetricMatrix matches the 
+        // dynamic dimension of mat
+        eigen_assert(Dimension == mat.cols()
+            && "Cannot construct an instance of SymmetricMatrix with fixed "
+            && "dimension from Matrix of type Eigen::Matrix<Scalar, -1, -1> "
+            && "for not matching dimensions.");
         int i = 0;
         for (int row = 0; row < mat.rows(); ++row) {
             for (int col = row; col < mat.cols(); ++col) {
@@ -81,6 +92,22 @@ class SymmetricMatrix {
         }
     }
 
+    /**
+     *  \brief Construct SymmetricMatrix from Eigen::SelfAdjointView
+     *
+     *  Construct an instance of SymmetricMatrix with fixed dimension by
+     *  passing an instance of Eigen::SelfAdjointView<Matrix, Eigen::Upper>.
+     *
+     *  \param mat Self adjoint view of Eigen::Matrix with fixed dimension
+     */
+    explicit SymmetricMatrix(const Eigen::SelfAdjointView<Eigen::Matrix<Scalar,                          Dimension, Dimension>, Eigen::Upper>& mat) {
+        int i = 0;
+        for (int row = 0; row < Dimension; ++row) {
+            for (int col = row; col < Dimension; ++col) {
+                elements[i++] = mat(row, col);
+            }
+        }
+    }
     /**
      * \brief Construct an Eigen::Matrix with fixed size from the current
      * instance of SymmetricMatrix
